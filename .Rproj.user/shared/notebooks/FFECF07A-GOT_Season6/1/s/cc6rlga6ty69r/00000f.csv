@@ -1,0 +1,36 @@
+"0","got_tidygraph <- tbl_graph(nodes = got_s6_nodes, edges = got_s6_edges, directed = FALSE)"
+"0",""
+"0","got_tidygraph"
+"1","[38;5;246m# A tbl_graph: 142 nodes and 542 edges
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# An undirected multigraph with 2 components
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Node Data: 142 × 2 (active)[39m
+  Id             Label         
+  [3m[38;5;246m<chr>[39m[23m          [3m[38;5;246m<chr>[39m[23m         
+[38;5;250m1[39m AERON          Aeron         
+[38;5;250m2[39m AERYS          Aerys         
+[38;5;250m3[39m ALLISER_THORNE Alliser       
+[38;5;250m4[39m AREO           Areo          
+[38;5;250m5[39m ARTHUR         Arthur        
+[38;5;250m6[39m ARTHUR_CHILD   Arthur (child)
+[38;5;246m# … with 136 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Edge Data: 542 × 4[39m
+   from    to Weight Season
+  [3m[38;5;246m<int>[39m[23m [3m[38;5;246m<int>[39m[23m  [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m    54   117    151      6
+[38;5;250m2[39m    84   132     88      6
+[38;5;250m3[39m   132   135     86      6
+[38;5;246m# … with 539 more rows[39m"
+"1",""
+"1","
+"

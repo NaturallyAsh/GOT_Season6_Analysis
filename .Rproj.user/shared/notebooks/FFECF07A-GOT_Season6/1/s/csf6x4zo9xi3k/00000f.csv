@@ -1,0 +1,5 @@
+"0","got_igraph <- graph_from_data_frame("
+"0","  got_s6_edges,"
+"0","  directed = FALSE,"
+"0","  vertices = got_s6_nodes"
+"0",")"

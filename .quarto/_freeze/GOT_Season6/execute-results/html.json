@@ -1,0 +1,16 @@
+{
+  "hash": "7fef6d6e6b9877cc88b55b2304a4bc44",
+  "result": {
+    "markdown": "---\ntitle: \"Game of Thrones Season 6 Network Analysis\"\n---\n\n\n::: {.panel-tabset}\n\n## Overview\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tidygraph)\nlibrary(ggraph)\nlibrary(igraph)\nlibrary(tidyverse)\n```\n:::\n\n\n\n## Explore\n\nLoad datasets\n\n\n::: {.cell}\n\n```{.r .cell-code}\ngot_s6_edges <- read_csv(\"data/got-s6-edges.csv\")\n\ngot_s6_nodes <- read_csv(\"data/got-s6-nodes.csv\")\n```\n:::\n\n\nExamine the structure\n\n\n::: {.cell}\n\n```{.r .cell-code}\nstr(got_s6_edges)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\nspec_tbl_df [542 × 4] (S3: spec_tbl_df/tbl_df/tbl/data.frame)\n $ Source: chr [1:542] \"JON\" \"MISSANDEI\" \"TYRION\" \"ARYA\" ...\n $ Target: chr [1:542] \"SANSA\" \"TYRION\" \"VARYS\" \"JAQEN\" ...\n $ Weight: num [1:542] 151 88 86 83 82 81 80 80 76 76 ...\n $ Season: num [1:542] 6 6 6 6 6 6 6 6 6 6 ...\n - attr(*, \"spec\")=\n  .. cols(\n  ..   Source = col_character(),\n  ..   Target = col_character(),\n  ..   Weight = col_double(),\n  ..   Season = col_double()\n  .. )\n - attr(*, \"problems\")=<externalptr> \n```\n:::\n\n```{.r .cell-code}\nstr(got_s6_nodes)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\nspec_tbl_df [142 × 2] (S3: spec_tbl_df/tbl_df/tbl/data.frame)\n $ Id   : chr [1:142] \"AERON\" \"AERYS\" \"ALLISER_THORNE\" \"AREO\" ...\n $ Label: chr [1:142] \"Aeron\" \"Aerys\" \"Alliser\" \"Areo\" ...\n - attr(*, \"spec\")=\n  .. cols(\n  ..   Id = col_character(),\n  ..   Label = col_character()\n  .. )\n - attr(*, \"problems\")=<externalptr> \n```\n:::\n:::\n\n\nGOT edge names: `Source`, `Target`, `Weight`, `Season`  \nGOT node names: `Id`, `Label`  \n\n\n\n{{< pagebreak >}}\n\n\n\ns\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n:::\n",
+    "supporting": [
+      "GOT_Season6_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

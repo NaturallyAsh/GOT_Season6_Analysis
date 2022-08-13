@@ -1,0 +1,211 @@
+---
+title: "Game of Thrones Season 6 Network Analysis"
+author: "Ashleigh Wilson"
+page-layout: article
+---
+
+::: {.panel-tabset}
+
+## Overview
+
+```{r, message=FALSE}
+library(tidygraph)
+library(ggraph)
+library(igraph)
+library(tidyverse)
+```
+
+
+## Explore
+
+Load datasets
+
+```{r, message=FALSE}
+got_s6_edges <- read_csv("data/got-s6-edges.csv")
+
+got_s6_nodes <- read_csv("data/got-s6-nodes.csv")
+
+```
+
+
+Examine the structure  
+```{r}
+str(got_s6_edges)
+str(got_s6_nodes)
+```
+
+GOT edge names: `Source`, `Target`, `Weight`, `Season`  
+GOT node names: `Id`, `Label`  
+
+
+---
+
+Create igraph object
+```{r}
+got_igraph <- graph_from_data_frame(
+  got_s6_edges,
+  directed = FALSE,
+  vertices = got_s6_nodes
+)
+```
+
+
+
+Create a tidygraph object
+```{r}
+got_tidygraph <- tbl_graph(nodes = got_s6_nodes, edges = got_s6_edges, directed = FALSE)
+
+got_tidygraph
+```
+
+<!-- 
+Ground truth graph:
+ggraph(got_tidygraph) +
+  geom_edge_link() +
+  geom_node_point()
+-->
+
+<!-- 
+count clusters:
+net1 |> 
+  activate(nodes) |> 
+  select(cluster) |> 
+  pull() |> unique() |> sort()
+-->
+
+### Communities and centralities.  
+
+*Communities* are subset clusters of a graph network. Community detection algorithms seek to build clusters that have high edge density between nodes inside each cluster, and have low edge density between nodes in different clusters. These algorithms quantify communities using a measure called **Modularity**. Modularity measures how dense the connections are within clusters of nodes. The higher the modularity (ranging from -1 to 1) the more connected nodes are inside clusters compared to between clusters.   
+
+A common community detection algorithm is the Louvain algorithm which seeks to maximize modularity. Tidygraph comes with some handy functions (prefixed with `group_`) to easily calculate communities.  
+
+*Centrality measures* describe the importance or influence of a vertex in the connected structure of a graph. For this project I focus of three common types of centrality measures:  
+- *Degree centrality* - the raw measure of the number of connections between nodes. So, this will show the number of people a GOT character has interacted with one or more times.  
+- *Betweenness centrality* - is a measure of how important a given vertex is in connecting other pairs of nodes in the graph. It describes the number of shortest paths between nodes. Nodes with high betweenness centrality are on the path between many other nodes, i.e. they are characters who are key connections or bridges between different groups of nodes. Characters with higher betweenness centrality can be regarded as influential and crucial players due to their intermediary position in the network. Their removal (or murder, as is common for GOT characters) from the network has the highest risk of cutting off informational flow and overall disconnection.  
+- *Node ranking* - The rank of a given node, measured in terms of degree of connectivity, is determined by the set of nodes that point to it. PageRank centrality is a measure that considers nodes more important if they have many incoming edges.   
+```{r}
+net1 <- got_tidygraph |> 
+  activate(nodes) |> 
+  mutate(
+    cluster = group_louvain(),
+    between = centrality_betweenness(),
+    rank = centrality_pagerank()
+  ) 
+
+```
+
+
+### Graph network with all characters in season 6  
+
+We can use `ggraph` to visualize the clusters of highly connected characters in season 6.  
+
+The thickness of lines are based on edge weights and represent the strength of a connection between characters.  
+
+The clusters of colored nodes represent communities of highly connected characters.  
+
+The size of nodes is each character's betweenness. The larger the size of the node, the greater impact the character's importance and their influence on the spread of information.  
+
+
+```{r}
+set.seed(123)
+ggraph(net1, layout = "stress") +
+  geom_edge_link2(aes(alpha = Weight)) +
+  geom_node_point(aes(color = factor(cluster), size = between)) + # remember to convert cluster to factor
+  geom_node_text(aes(label = Label, size = rank)) +
+  theme_graph() +
+  theme(
+    legend.position = "none"
+  )
+```
+
+
+<!-- 
+Calculate and graph key players:
+
+# not fully sure what's behind the node_is_keyplayer() algorithm.
+key_players <- net1 |> 
+  activate(nodes) |> 
+  mutate(key = node_is_keyplayer(10)) |> 
+  filter(key == TRUE) |> 
+  select(Label) |> 
+  pull()
+
+net1 |> 
+  activate(nodes) |> 
+  mutate(Label = ifelse(
+    Label %in% key_players,
+    key_players,
+    ""
+  )) |> 
+  ggraph(layout = "stress") +
+  geom_edge_link2(aes(alpha = Weight), show.legend = FALSE) +
+  geom_node_point(aes(color = factor(cluster), size = between), show.legend = FALSE) + # remember to convert cluster to factor
+  geom_node_text(aes(label = Label, size = rank), show.legend = FALSE)
+-->
+
+
+
+### Top character in each community.
+
+Here we'll look for the most important character in each community based on the degree, or the number of connections, each character has in the network.  
+```{r}
+# get total number of communities
+got_clusters <- net1 |> 
+  activate(nodes) |> 
+  select(cluster) |> 
+  pull() |> unique() |> sort()
+
+top_characters <- c()
+
+# Quick print view of the top characters of each community by degree centrality.
+for (i in got_clusters) {
+  tops <- net1 |> 
+    activate(nodes) |> 
+    mutate(degree = centrality_degree()) |> 
+    filter(cluster == i) |> 
+    arrange(desc(degree)) 
+  
+  print(tops)
+}
+
+# Store the names of the top characters of each community to a vector
+for (i in got_clusters) {
+  tops <- net1 |> 
+    activate(nodes) |> 
+    mutate(degree = centrality_degree()) |> 
+    filter(cluster == i) |> 
+    arrange(desc(degree)) |> 
+    top_n(degree, n = 1) |> 
+    pull(Label)
+  
+  top_characters <- top_characters |> append(tops)
+}
+```
+
+
+
+Graph displaying top characters in each community.
+```{r}
+set.seed(123)
+top_char_net <- net1 |> 
+  activate(nodes) |> 
+  mutate(
+    Label = ifelse(
+    Label %in% top_characters,
+    Label,
+    ""
+  ))
+
+ggraph(top_char_net, layout = "stress") +
+  geom_edge_link2(aes(alpha = Weight)) +
+  geom_node_point(aes(color = factor(cluster), size = between)) + # remember to convert cluster to factor
+  geom_node_text(aes(label = Label, size = rank)) + 
+  theme_graph() + 
+  theme(
+    legend.position = "none"
+  )
+```
+
+
+
+:::

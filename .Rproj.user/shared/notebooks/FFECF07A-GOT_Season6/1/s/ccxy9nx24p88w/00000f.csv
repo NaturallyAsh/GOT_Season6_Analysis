@@ -1,0 +1,327 @@
+"0","# get total number of communities"
+"0","got_clusters <- net1 |> "
+"0","  activate(nodes) |> "
+"0","  select(cluster) |> "
+"0","  pull() |> unique() |> sort()"
+"0",""
+"0","top_characters <- c()"
+"0",""
+"0","# Quick print view of the top characters of each community by degree centrality."
+"0","for (i in got_clusters) {"
+"0","  tops <- net1 |> "
+"0","    activate(nodes) |> "
+"0","    mutate(degree = centrality_degree()) |> "
+"0","    filter(cluster == i) |> "
+"0","    arrange(desc(degree)) "
+"0","  "
+"0","  print(tops)"
+"0","}"
+"1","[38;5;246m# A tbl_graph: 39 nodes and 158 edges
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# An undirected multigraph with 1 component
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Node Data: 39 × 6 (active)[39m
+  Id         Label      cluster between    rank degree
+  [3m[38;5;246m<chr>[39m[23m      [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<int>[39m[23m   [3m[38;5;246m<dbl>[39m[23m   [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m SANSA      Sansa            1  [4m2[24m592.  0.028[4m4[24m      40
+[38;5;250m2[39m JON        Jon              1  [4m1[24m889.  0.023[4m3[24m      31
+[38;5;250m3[39m DAVOS      Davos            1   227.  0.017[4m1[24m      23
+[38;5;250m4[39m TORMUND    Tormund          1   217.  0.015[4m6[24m      21
+[38;5;250m5[39m RAMSAY     Ramsay           1   587.  0.016[4m1[24m      19
+[38;5;250m6[39m MELISANDRE Melisandre       1    57.8 0.009[4m4[24m[4m3[24m     13
+[38;5;246m# … with 33 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Edge Data: 158 × 4[39m
+   from    to Weight Season
+  [3m[38;5;246m<int>[39m[23m [3m[38;5;246m<int>[39m[23m  [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m     1     2    151      6
+[38;5;250m2[39m     3     6     82      6
+[38;5;250m3[39m     2     3     80      6
+[38;5;246m# … with 155 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m# A tbl_graph: 23 nodes and 63 edges
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# An undirected simple graph with 1 component
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Node Data: 23 × 6 (active)[39m
+  Id        Label     cluster between    rank degree
+  [3m[38;5;246m<chr>[39m[23m     [3m[38;5;246m<chr>[39m[23m       [3m[38;5;246m<int>[39m[23m   [3m[38;5;246m<dbl>[39m[23m   [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m DAENERYS  Daenerys        2  821.   0.017[4m5[24m      18
+[38;5;250m2[39m VARYS     Varys           2  489.   0.014[4m3[24m      16
+[38;5;250m3[39m THEON     Theon           2  846.   0.011[4m1[24m      13
+[38;5;250m4[39m MISSANDEI Missandei       2  141.   0.009[4m5[24m[4m0[24m     10
+[38;5;250m5[39m GREY_WORM Grey Worm       2    8.97 0.007[4m9[24m[4m7[24m      9
+[38;5;250m6[39m YARA      Yara            2   75.6  0.008[4m4[24m[4m4[24m      9
+[38;5;246m# … with 17 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Edge Data: 63 × 4[39m
+   from    to Weight Season
+  [3m[38;5;246m<int>[39m[23m [3m[38;5;246m<int>[39m[23m  [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m     3     6     72      6
+[38;5;250m2[39m    10    11     60      6
+[38;5;250m3[39m     1    10     54      6
+[38;5;246m# … with 60 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m# A tbl_graph: 17 nodes and 64 edges
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# An undirected simple graph with 1 component
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Node Data: 17 × 6 (active)[39m
+  Id           Label        cluster between    rank degree
+  [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<chr>[39m[23m          [3m[38;5;246m<int>[39m[23m   [3m[38;5;246m<dbl>[39m[23m   [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m CERSEI       Cersei             3 [4m1[24m157.   0.020[4m3[24m      27
+[38;5;250m2[39m JAIME        Jaime              3 [4m1[24m288.   0.018[4m5[24m      24
+[38;5;250m3[39m MARGAERY     Margaery           3  434.   0.012[4m2[24m      17
+[38;5;250m4[39m OLENNA       Olenna             3 [4m1[24m121.   0.012[4m0[24m      14
+[38;5;250m5[39m HIGH_SPARROW High Sparrow       3    8.13 0.007[4m8[24m[4m5[24m     10
+[38;5;250m6[39m KEVAN        Kevan              3    6.23 0.007[4m9[24m[4m0[24m     10
+[38;5;246m# … with 11 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Edge Data: 64 × 4[39m
+   from    to Weight Season
+  [3m[38;5;246m<int>[39m[23m [3m[38;5;246m<int>[39m[23m  [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m     3     5     76      6
+[38;5;250m2[39m     1     2     66      6
+[38;5;250m3[39m     5     7     49      6
+[38;5;246m# … with 61 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m# A tbl_graph: 14 nodes and 48 edges
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# An undirected simple graph with 1 component
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Node Data: 14 × 6 (active)[39m
+  Id         Label      cluster between    rank degree
+  [3m[38;5;246m<chr>[39m[23m      [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<int>[39m[23m   [3m[38;5;246m<dbl>[39m[23m   [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m TYRION     Tyrion           4  [4m1[24m466.  0.020[4m2[24m      26
+[38;5;250m2[39m ARYA       Arya             4   326.  0.012[4m6[24m      17
+[38;5;250m3[39m LADY_CRANE Lady Crane       4    62.4 0.010[4m2[24m      14
+[38;5;250m4[39m BOBONO     Bobono           4    38.3 0.009[4m2[24m[4m4[24m     13
+[38;5;250m5[39m IZEMBARO   Izembaro         4    31.9 0.009[4m3[24m[4m1[24m     13
+[38;5;250m6[39m BIANCA     Bianca           4    34.8 0.008[4m5[24m[4m6[24m     12
+[38;5;246m# … with 8 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Edge Data: 48 × 4[39m
+   from    to Weight Season
+  [3m[38;5;246m<int>[39m[23m [3m[38;5;246m<int>[39m[23m  [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m     2    12     83      6
+[38;5;250m2[39m     2     3     64      6
+[38;5;250m3[39m     2    13     48      6
+[38;5;246m# … with 45 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m# A tbl_graph: 14 nodes and 44 edges
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# An undirected simple graph with 1 component
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Node Data: 14 × 6 (active)[39m
+  Id               Label            cluster between    rank degree
+  [3m[38;5;246m<chr>[39m[23m            [3m[38;5;246m<chr>[39m[23m              [3m[38;5;246m<int>[39m[23m   [3m[38;5;246m<dbl>[39m[23m   [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m NED              Ned                    5 [4m1[24m112.   0.018[4m4[24m      23
+[38;5;250m2[39m BRAN             Bran                   5  626.   0.014[4m3[24m      17
+[38;5;250m3[39m THREE_EYED_RAVEN Three Eyed Raven       5   26.9  0.009[4m8[24m[4m3[24m     11
+[38;5;250m4[39m HODOR            Hodor                  5   21.3  0.008[4m0[24m[4m9[24m      9
+[38;5;250m5[39m BENJEN           Benjen                 5    6.80 0.006[4m5[24m[4m0[24m      7
+[38;5;250m6[39m MEERA            Meera                  5    1.2  0.006[4m5[24m[4m7[24m      7
+[38;5;246m# … with 8 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Edge Data: 44 × 4[39m
+   from    to Weight Season
+  [3m[38;5;246m<int>[39m[23m [3m[38;5;246m<int>[39m[23m  [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m     2     3     76      6
+[38;5;250m2[39m     2     6     51      6
+[38;5;250m3[39m     4     6     39      6
+[38;5;246m# … with 41 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m# A tbl_graph: 9 nodes and 19 edges
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# An undirected simple graph with 1 component
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Node Data: 9 × 6 (active)[39m
+  Id      Label   cluster between    rank degree
+  [3m[38;5;246m<chr>[39m[23m   [3m[38;5;246m<chr>[39m[23m     [3m[38;5;246m<int>[39m[23m   [3m[38;5;246m<dbl>[39m[23m   [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m ELLARIA Ellaria       6   322.  0.009[4m7[24m[4m8[24m      8
+[38;5;250m2[39m TYENE   Tyene         6   192   0.008[4m4[24m[4m2[24m      7
+[38;5;250m3[39m DORAN   Doran         6     1.5 0.006[4m8[24m[4m1[24m      5
+[38;5;250m4[39m NYMERIA Nymeria       6    65.5 0.006[4m2[24m[4m7[24m      5
+[38;5;250m5[39m OBARA   Obara         6    65.5 0.006[4m2[24m[4m7[24m      5
+[38;5;250m6[39m AREO    Areo          6     0   0.005[4m4[24m[4m3[24m      4
+[38;5;246m# … with 3 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Edge Data: 19 × 4[39m
+   from    to Weight Season
+  [3m[38;5;246m<int>[39m[23m [3m[38;5;246m<int>[39m[23m  [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m     4     5      9      6
+[38;5;250m2[39m     1     3      8      6
+[38;5;250m3[39m     4     9      7      6
+[38;5;246m# … with 16 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m# A tbl_graph: 9 nodes and 19 edges
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# An undirected simple graph with 1 component
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Node Data: 9 × 6 (active)[39m
+  Id           Label        cluster between    rank degree
+  [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<chr>[39m[23m          [3m[38;5;246m<int>[39m[23m   [3m[38;5;246m<dbl>[39m[23m   [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m BRYNDEN      Brynden            7   333.  0.010[4m4[24m      11
+[38;5;250m2[39m EDMURE       Edmure             7   168.  0.010[4m1[24m      10
+[38;5;250m3[39m WALDER       Walder             7    56.1 0.007[4m1[24m[4m1[24m      8
+[38;5;250m4[39m BRONN        Bronn              7    12.2 0.006[4m4[24m[4m1[24m      7
+[38;5;250m5[39m BLACK_WALDER Black Walder       7     0   0.005[4m7[24m[4m2[24m      6
+[38;5;250m6[39m LOTHAR       Lothar             7     0   0.005[4m7[24m[4m2[24m      6
+[38;5;246m# … with 3 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Edge Data: 19 × 4[39m
+   from    to Weight Season
+  [3m[38;5;246m<int>[39m[23m [3m[38;5;246m<int>[39m[23m  [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m     5     6     15      6
+[38;5;250m2[39m     3     5     15      6
+[38;5;250m3[39m     1     2     11      6
+[38;5;246m# … with 16 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m# A tbl_graph: 9 nodes and 23 edges
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# An undirected simple graph with 1 component
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Node Data: 9 × 6 (active)[39m
+  Id      Label   cluster between    rank degree
+  [3m[38;5;246m<chr>[39m[23m   [3m[38;5;246m<chr>[39m[23m     [3m[38;5;246m<int>[39m[23m   [3m[38;5;246m<dbl>[39m[23m   [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m SAM     Sam           8  [4m1[24m010.  0.011[4m3[24m       9
+[38;5;250m2[39m GILLY   Gilly         8     2.7 0.008[4m8[24m[4m2[24m      7
+[38;5;250m3[39m MELESSA Melessa       8     0.2 0.007[4m4[24m[4m7[24m      6
+[38;5;250m4[39m RANDYLL Randyll       8     0.2 0.007[4m4[24m[4m7[24m      6
+[38;5;250m5[39m TALLA   Talla         8     0.2 0.007[4m4[24m[4m7[24m      6
+[38;5;250m6[39m DICKON  Dickon        8     0   0.006[4m3[24m[4m7[24m      5
+[38;5;246m# … with 3 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Edge Data: 23 × 4[39m
+   from    to Weight Season
+  [3m[38;5;246m<int>[39m[23m [3m[38;5;246m<int>[39m[23m  [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m     1     2     80      6
+[38;5;250m2[39m     1     7     21      6
+[38;5;250m3[39m     1     3     21      6
+[38;5;246m# … with 20 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m# A tbl_graph: 8 nodes and 14 edges
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# An undirected simple graph with 1 component
+[39m"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Node Data: 8 × 6 (active)[39m
+  Id     Label  cluster between    rank degree
+  [3m[38;5;246m<chr>[39m[23m  [3m[38;5;246m<chr>[39m[23m    [3m[38;5;246m<int>[39m[23m   [3m[38;5;246m<dbl>[39m[23m   [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m LEM    Lem          9       7 0.011[4m3[24m       6
+[38;5;250m2[39m HOUND  Sandor       9       7 0.010[4m1[24m       5
+[38;5;250m3[39m RAY    Ray          9       2 0.007[4m8[24m[4m0[24m      4
+[38;5;250m4[39m BERIC  Beric        9       0 0.006[4m1[24m[4m2[24m      3
+[38;5;250m5[39m FLYNN  Flynn        9       0 0.006[4m0[24m[4m2[24m      3
+[38;5;250m6[39m MORGAN Morgan       9       0 0.006[4m0[24m[4m2[24m      3
+[38;5;246m# … with 2 more rows[39m"
+"1",""
+"1","
+"
+"1","[38;5;246m#
+[39m"
+"1","[38;5;246m# Edge Data: 14 × 4[39m
+   from    to Weight Season
+  [3m[38;5;246m<int>[39m[23m [3m[38;5;246m<int>[39m[23m  [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m     2     3     41      6
+[38;5;250m2[39m     2     4     26      6
+[38;5;250m3[39m     2     7     25      6
+[38;5;246m# … with 11 more rows[39m"
+"1",""
+"1","
+"
+"0","# Store the names of the top characters of each community to a vector"
+"0","for (i in got_clusters) {"
+"0","  tops <- net1 |> "
+"0","    activate(nodes) |> "
+"0","    mutate(degree = centrality_degree()) |> "
+"0","    filter(cluster == i) |> "
+"0","    arrange(desc(degree)) |> "
+"0","    top_n(degree, n = 1) |> "
+"0","    pull(Label)"
+"0","  "
+"0","  top_characters <- top_characters |> append(tops)"
+"0","}"
