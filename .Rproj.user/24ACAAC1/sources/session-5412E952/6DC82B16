@@ -3,7 +3,7 @@
     "path": "~/Library/CloudStorage/OneDrive-Personal/Coding/RStudio/Network_Analysis/GOT_Season6/GOT_Season6.qmd",
     "project_path": "GOT_Season6.qmd",
     "type": "quarto_markdown",
-    "hash": "3023431914",
+    "hash": "3164826971",
     "contents": "",
     "dirty": false,
     "created": 1660232748344.0,
@@ -12,8 +12,8 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "59,0",
-        "scrollLine": "64",
+        "cursorPosition": "187,81",
+        "scrollLine": "185",
         "rmdVisualMode": "false",
         "rmdVisualWrapConfigured": "true",
         "docOutlineVisible": "1",
@@ -21,11 +21,11 @@
         "rmdVisualModeLocation": "450:230.90908813476562"
     },
     "folds": "",
-    "lastKnownWriteTime": 1660925483,
+    "lastKnownWriteTime": 1660937045,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1660925483640,
+    "last_content_update": 1660937045249,
     "read_only": false,
     "read_only_alternatives": []
 }
