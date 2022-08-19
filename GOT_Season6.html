@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ashleigh Wilson">
 
 <title>Game of Thrones Season 6 Network Analysis</title>
 <style>
@@ -110,6 +111,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ashleigh Wilson </p>
+          </div>
+  </div>
     
     
   </div>
@@ -168,8 +175,390 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>GOT edge names: <code>Source</code>, <code>Target</code>, <code>Weight</code>, <code>Season</code><br>
 GOT node names: <code>Id</code>, <code>Label</code></p>
-<div style="page-break-after: always;"></div>
-<p>s</p>
+<hr>
+<p>Create igraph object</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>got_igraph <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  got_s6_edges,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">directed =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vertices =</span> got_s6_nodes</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Create a tidygraph object</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>got_tidygraph <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(<span class="at">nodes =</span> got_s6_nodes, <span class="at">edges =</span> got_s6_edges, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>got_tidygraph</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tbl_graph: 142 nodes and 542 edges
+#
+# An undirected multigraph with 2 components
+#
+# Node Data: 142 × 2 (active)
+  Id             Label         
+  &lt;chr&gt;          &lt;chr&gt;         
+1 AERON          Aeron         
+2 AERYS          Aerys         
+3 ALLISER_THORNE Alliser       
+4 AREO           Areo          
+5 ARTHUR         Arthur        
+6 ARTHUR_CHILD   Arthur (child)
+# … with 136 more rows
+#
+# Edge Data: 542 × 4
+   from    to Weight Season
+  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1    54   117    151      6
+2    84   132     88      6
+3   132   135     86      6
+# … with 539 more rows</code></pre>
+</div>
+</div>
+<!-- 
+Ground truth graph:
+ggraph(got_tidygraph) +
+  geom_edge_link() +
+  geom_node_point()
+-->
+<!-- 
+count clusters:
+net1 |> 
+  activate(nodes) |> 
+  select(cluster) |> 
+  pull() |> unique() |> sort()
+-->
+<section id="communities-and-centralities." class="level3">
+<h3 class="anchored" data-anchor-id="communities-and-centralities.">Communities and centralities.</h3>
+<p><em>Communities</em> are subset clusters of a graph network. Community detection algorithms seek to build clusters that have high edge density between nodes inside each cluster, and have low edge density between nodes in different clusters. These algorithms quantify communities using a measure called <strong>Modularity</strong>. Modularity measures how dense the connections are within clusters of nodes. The higher the modularity (ranging from -1 to 1) the more connected nodes are inside clusters compared to between clusters.</p>
+<p>A common community detection algorithm is the Louvain algorithm which seeks to maximize modularity. Tidygraph comes with some handy functions (prefixed with <code>group_</code>) to easily calculate communities.</p>
+<p><em>Centrality measures</em> describe the importance or influence of a vertex in the connected structure of a graph. For this project I focus of three common types of centrality measures:<br>
+- <em>Degree centrality</em> - the raw measure of the number of connections between nodes. So, this will show the number of people a GOT character has interacted with one or more times.<br>
+- <em>Betweenness centrality</em> - is a measure of how important a given vertex is in connecting other pairs of nodes in the graph. It describes the number of shortest paths between nodes. Nodes with high betweenness centrality are on the path between many other nodes, i.e.&nbsp;they are characters who are key connections or bridges between different groups of nodes. Characters with higher betweenness centrality can be regarded as influential and crucial players due to their intermediary position in the network. Their removal (or murder, as is common for GOT characters) from the network has the highest risk of cutting off informational flow and overall disconnection.<br>
+- <em>Node ranking</em> - The rank of a given node, measured in terms of degree of connectivity, is determined by the set of nodes that point to it. PageRank centrality is a measure that considers nodes more important if they have many incoming edges.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>net1 <span class="ot">&lt;-</span> got_tidygraph <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(nodes) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cluster =</span> <span class="fu">group_louvain</span>(),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">between =</span> <span class="fu">centrality_betweenness</span>(),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">rank =</span> <span class="fu">centrality_pagerank</span>()</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in betweenness(graph = graph, v = V(graph), directed = directed, :
+'nobigint' is deprecated since igraph 1.3 and will be removed in igraph 1.4</code></pre>
+</div>
+</div>
+</section>
+<section id="graph-network-with-all-characters-in-season-6" class="level3">
+<h3 class="anchored" data-anchor-id="graph-network-with-all-characters-in-season-6">Graph network with all characters in season 6</h3>
+<p>We can use <code>ggraph</code> to visualize the clusters of highly connected characters in season 6.</p>
+<p>The thickness of lines are based on edge weights and represent the strength of a connection between characters.</p>
+<p>The clusters of colored nodes represent communities of highly connected characters.</p>
+<p>The size of nodes is each character’s betweenness. The larger the size of the node, the greater impact the character’s importance and their influence on the spread of information.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(net1, <span class="at">layout =</span> <span class="st">"stress"</span>) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link2</span>(<span class="fu">aes</span>(<span class="at">alpha =</span> Weight)) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(cluster), <span class="at">size =</span> between)) <span class="sc">+</span> <span class="co"># remember to convert cluster to factor</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> Label, <span class="at">size =</span> rank)) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>() <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GOT_Season6_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<!-- 
+Calculate and graph key players:
+
+# not fully sure what's behind the node_is_keyplayer() algorithm.
+key_players <- net1 |> 
+  activate(nodes) |> 
+  mutate(key = node_is_keyplayer(10)) |> 
+  filter(key == TRUE) |> 
+  select(Label) |> 
+  pull()
+
+net1 |> 
+  activate(nodes) |> 
+  mutate(Label = ifelse(
+    Label %in% key_players,
+    key_players,
+    ""
+  )) |> 
+  ggraph(layout = "stress") +
+  geom_edge_link2(aes(alpha = Weight), show.legend = FALSE) +
+  geom_node_point(aes(color = factor(cluster), size = between), show.legend = FALSE) + # remember to convert cluster to factor
+  geom_node_text(aes(label = Label, size = rank), show.legend = FALSE)
+-->
+</section>
+<section id="top-character-in-each-community." class="level3">
+<h3 class="anchored" data-anchor-id="top-character-in-each-community.">Top character in each community.</h3>
+<p>Here we’ll look for the most important character in each community based on the degree, or the number of connections, each character has in the network.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get total number of communities</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>got_clusters <span class="ot">&lt;-</span> net1 <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(nodes) <span class="sc">|&gt;</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(cluster) <span class="sc">|&gt;</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>() <span class="sc">|&gt;</span> <span class="fu">unique</span>() <span class="sc">|&gt;</span> <span class="fu">sort</span>()</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>top_characters <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick print view of the top characters of each community by degree centrality.</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> got_clusters) {</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  tops <span class="ot">&lt;-</span> net1 <span class="sc">|&gt;</span> </span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">activate</span>(nodes) <span class="sc">|&gt;</span> </span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">degree =</span> <span class="fu">centrality_degree</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(cluster <span class="sc">==</span> i) <span class="sc">|&gt;</span> </span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(degree)) </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(tops)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tbl_graph: 39 nodes and 158 edges
+#
+# An undirected multigraph with 1 component
+#
+# Node Data: 39 × 6 (active)
+  Id         Label      cluster between    rank degree
+  &lt;chr&gt;      &lt;chr&gt;        &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1 SANSA      Sansa            1  2592.  0.0284      40
+2 JON        Jon              1  1889.  0.0233      31
+3 DAVOS      Davos            1   227.  0.0171      23
+4 TORMUND    Tormund          1   217.  0.0156      21
+5 RAMSAY     Ramsay           1   587.  0.0161      19
+6 MELISANDRE Melisandre       1    57.8 0.00943     13
+# … with 33 more rows
+#
+# Edge Data: 158 × 4
+   from    to Weight Season
+  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     1     2    151      6
+2     3     6     82      6
+3     2     3     80      6
+# … with 155 more rows
+# A tbl_graph: 25 nodes and 75 edges
+#
+# An undirected simple graph with 1 component
+#
+# Node Data: 25 × 6 (active)
+  Id        Label     cluster between    rank degree
+  &lt;chr&gt;     &lt;chr&gt;       &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1 TYRION    Tyrion          2 1466.   0.0202      26
+2 DAENERYS  Daenerys        2  821.   0.0175      18
+3 VARYS     Varys           2  489.   0.0143      16
+4 THEON     Theon           2  846.   0.0111      13
+5 MISSANDEI Missandei       2  141.   0.00950     10
+6 GREY_WORM Grey Worm       2    8.97 0.00797      9
+# … with 19 more rows
+#
+# Edge Data: 75 × 4
+   from    to Weight Season
+  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     1     5     88      6
+2     1     3     86      6
+3     1     6     81      6
+# … with 72 more rows
+# A tbl_graph: 17 nodes and 64 edges
+#
+# An undirected simple graph with 1 component
+#
+# Node Data: 17 × 6 (active)
+  Id           Label        cluster between    rank degree
+  &lt;chr&gt;        &lt;chr&gt;          &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1 CERSEI       Cersei             3 1157.   0.0203      27
+2 JAIME        Jaime              3 1288.   0.0185      24
+3 MARGAERY     Margaery           3  434.   0.0122      17
+4 OLENNA       Olenna             3 1121.   0.0120      14
+5 HIGH_SPARROW High Sparrow       3    8.13 0.00785     10
+6 KEVAN        Kevan              3    6.23 0.00790     10
+# … with 11 more rows
+#
+# Edge Data: 64 × 4
+   from    to Weight Season
+  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     3     5     76      6
+2     1     2     66      6
+3     5     7     49      6
+# … with 61 more rows
+# A tbl_graph: 14 nodes and 44 edges
+#
+# An undirected simple graph with 1 component
+#
+# Node Data: 14 × 6 (active)
+  Id               Label            cluster between    rank degree
+  &lt;chr&gt;            &lt;chr&gt;              &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1 NED              Ned                    4 1112.   0.0184      23
+2 BRAN             Bran                   4  626.   0.0143      17
+3 THREE_EYED_RAVEN Three Eyed Raven       4   26.9  0.00983     11
+4 HODOR            Hodor                  4   21.3  0.00809      9
+5 BENJEN           Benjen                 4    6.80 0.00650      7
+6 MEERA            Meera                  4    1.2  0.00657      7
+# … with 8 more rows
+#
+# Edge Data: 44 × 4
+   from    to Weight Season
+  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     2     3     76      6
+2     2     6     51      6
+3     4     6     39      6
+# … with 41 more rows
+# A tbl_graph: 12 nodes and 38 edges
+#
+# An undirected simple graph with 1 component
+#
+# Node Data: 12 × 6 (active)
+  Id         Label      cluster between    rank degree
+  &lt;chr&gt;      &lt;chr&gt;        &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1 ARYA       Arya             5   326.  0.0126      17
+2 LADY_CRANE Lady Crane       5    62.4 0.0102      14
+3 BOBONO     Bobono           5    38.3 0.00924     13
+4 IZEMBARO   Izembaro         5    31.9 0.00931     13
+5 BIANCA     Bianca           5    34.8 0.00856     12
+6 CLARENZO   Clarenzo         5    10.8 0.00856     12
+# … with 6 more rows
+#
+# Edge Data: 38 × 4
+   from    to Weight Season
+  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     1    11     83      6
+2     1     2     64      6
+3     1    12     48      6
+# … with 35 more rows
+# A tbl_graph: 9 nodes and 19 edges
+#
+# An undirected simple graph with 1 component
+#
+# Node Data: 9 × 6 (active)
+  Id      Label   cluster between    rank degree
+  &lt;chr&gt;   &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1 ELLARIA Ellaria       6   322.  0.00978      8
+2 TYENE   Tyene         6   192   0.00842      7
+3 DORAN   Doran         6     1.5 0.00681      5
+4 NYMERIA Nymeria       6    65.5 0.00627      5
+5 OBARA   Obara         6    65.5 0.00627      5
+6 AREO    Areo          6     0   0.00543      4
+# … with 3 more rows
+#
+# Edge Data: 19 × 4
+   from    to Weight Season
+  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     4     5      9      6
+2     1     3      8      6
+3     4     9      7      6
+# … with 16 more rows
+# A tbl_graph: 9 nodes and 19 edges
+#
+# An undirected simple graph with 1 component
+#
+# Node Data: 9 × 6 (active)
+  Id           Label        cluster between    rank degree
+  &lt;chr&gt;        &lt;chr&gt;          &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1 BRYNDEN      Brynden            7   333.  0.0104      11
+2 EDMURE       Edmure             7   168.  0.0101      10
+3 WALDER       Walder             7    56.1 0.00711      8
+4 BRONN        Bronn              7    12.2 0.00641      7
+5 BLACK_WALDER Black Walder       7     0   0.00572      6
+6 LOTHAR       Lothar             7     0   0.00572      6
+# … with 3 more rows
+#
+# Edge Data: 19 × 4
+   from    to Weight Season
+  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     5     6     15      6
+2     3     5     15      6
+3     1     2     11      6
+# … with 16 more rows
+# A tbl_graph: 9 nodes and 23 edges
+#
+# An undirected simple graph with 1 component
+#
+# Node Data: 9 × 6 (active)
+  Id      Label   cluster between    rank degree
+  &lt;chr&gt;   &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1 SAM     Sam           8  1010.  0.0113       9
+2 GILLY   Gilly         8     2.7 0.00882      7
+3 MELESSA Melessa       8     0.2 0.00747      6
+4 RANDYLL Randyll       8     0.2 0.00747      6
+5 TALLA   Talla         8     0.2 0.00747      6
+6 DICKON  Dickon        8     0   0.00637      5
+# … with 3 more rows
+#
+# Edge Data: 23 × 4
+   from    to Weight Season
+  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     1     2     80      6
+2     1     7     21      6
+3     1     3     21      6
+# … with 20 more rows
+# A tbl_graph: 8 nodes and 14 edges
+#
+# An undirected simple graph with 1 component
+#
+# Node Data: 8 × 6 (active)
+  Id     Label  cluster between    rank degree
+  &lt;chr&gt;  &lt;chr&gt;    &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+1 LEM    Lem          9       7 0.0113       6
+2 HOUND  Sandor       9       7 0.0101       5
+3 RAY    Ray          9       2 0.00780      4
+4 BERIC  Beric        9       0 0.00612      3
+5 FLYNN  Flynn        9       0 0.00602      3
+6 MORGAN Morgan       9       0 0.00602      3
+# … with 2 more rows
+#
+# Edge Data: 14 × 4
+   from    to Weight Season
+  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     2     3     41      6
+2     2     4     26      6
+3     2     7     25      6
+# … with 11 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Store the names of the top characters of each community to a vector</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> got_clusters) {</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  tops <span class="ot">&lt;-</span> net1 <span class="sc">|&gt;</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">activate</span>(nodes) <span class="sc">|&gt;</span> </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">degree =</span> <span class="fu">centrality_degree</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(cluster <span class="sc">==</span> i) <span class="sc">|&gt;</span> </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(degree)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">top_n</span>(degree, <span class="at">n =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(Label)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  top_characters <span class="ot">&lt;-</span> top_characters <span class="sc">|&gt;</span> <span class="fu">append</span>(tops)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>top_characters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Sansa"   "Tyrion"  "Cersei"  "Ned"     "Arya"    "Ellaria" "Brynden"
+[8] "Sam"     "Lem"    </code></pre>
+</div>
+</div>
+<p>Graph displaying top characters in each community.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>top_char_net <span class="ot">&lt;-</span> net1 <span class="sc">|&gt;</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(nodes) <span class="sc">|&gt;</span> </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Label =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    Label <span class="sc">%in%</span> top_characters,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    Label,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">""</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(top_char_net, <span class="at">layout =</span> <span class="st">"stress"</span>) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link2</span>(<span class="fu">aes</span>(<span class="at">alpha =</span> Weight)) <span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(cluster), <span class="at">size =</span> between)) <span class="sc">+</span> <span class="co"># remember to convert cluster to factor</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> Label, <span class="at">size =</span> rank)) <span class="sc">+</span> </span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>() <span class="sc">+</span> </span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GOT_Season6_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
 </div>
 </div>
 </div>

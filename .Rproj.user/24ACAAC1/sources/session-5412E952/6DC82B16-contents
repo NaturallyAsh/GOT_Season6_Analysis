@@ -13,6 +13,7 @@ library(tidygraph)
 library(ggraph)
 library(igraph)
 library(tidyverse)
+library(networkD3)
 ```
 
 
@@ -155,7 +156,7 @@ got_clusters <- net1 |>
   select(cluster) |> 
   pull() |> unique() |> sort()
 
-top_characters <- c()
+
 
 # Quick print view of the top characters of each community by degree centrality.
 for (i in got_clusters) {
@@ -168,7 +169,15 @@ for (i in got_clusters) {
   print(tops)
 }
 
-# Store the names of the top characters of each community to a vector
+# 
+
+```
+
+
+Now, we'll store the names of the top characters of each community to a vector.
+```{r}
+top_characters <- c()
+
 for (i in got_clusters) {
   tops <- net1 |> 
     activate(nodes) |> 
@@ -180,9 +189,31 @@ for (i in got_clusters) {
   
   top_characters <- top_characters |> append(tops)
 }
+
+top_characters
 ```
 
+The top characters in each community based on their number of connections are:  
+- Sansa:  
+  - Community 1: Sansa leads this community comprised mainly of the North and Winterfell. Her strong connections with King's Landing and other communities places her as the top character. 
+- Daenerys:  
+  - Community 2: Daenary's connections span the land of Essos across the narrow sea. Season 6 sees her reach expand futher to outside communities through her connections with Tyrion and Yara.  
+- Cersei:  
+  - Community 3: Cersei's connections dominate the areas of King's Landing and the Riverlands. Her influence expands in season 6 through her connections with Tyrion and Ellaria.   
+- Tyrion:  
+  - Community 4: Tyrion's status as a Lannister and his new ties to Essos, particularly with Daenary's, place him at the head of this community.  
+- Ned:  
+  - Community 5: Even in death, Eddard's (Ned) additional ties revealed through his son Bran's visions puts him at the head of this community. Ned's connections stretch from Winterfell to the Night's Watch at the Wall which connects the folks beyond the Wall.  
+- Ellaria:  
+  - Community 6: Ellaria is Dornish royalty with the greatest number of connections to King's Landing.  
+- Brynden:  
+  - Community 7: Brynden was the uncle of Catelyn Stark and once the served as the Hand of the King and Master of Whisperers to King Aegon Targaryen. He heads this community through his connections with the North and King's Landing.  
+- Sam:  
+  - Community 8: Sam of House Tarly heads the community comprising of members from The Night's Watch, Oldtown, the Citadel, and with ties to the Starks.  
+- Lem:  
+  - Community 9: Lem of the Brotherhood is the top character of a community mostly comprised of folk largely disconnected from the political machinations of Westeros. 
 
+---
 
 Graph displaying top characters in each community.
 ```{r}
