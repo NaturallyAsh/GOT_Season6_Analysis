@@ -6,21 +6,25 @@ page-layout: article
 
 ::: {.panel-tabset}
 
-## Overview
+## Overview  
 
+We will explore the characters from the Game of Thrones Season 6 television series and visualize the network of connections between these characters.  
+
+Data source available [here](https://github.com/mathbeveridge/gameofthrones).
+
+
+## Explore  
+
+Required packages:  
 ```{r, message=FALSE}
 library(tidygraph)
 library(ggraph)
 library(igraph)
 library(tidyverse)
-library(networkD3)
 ```
 
 
-## Explore
-
 Load datasets
-
 ```{r, message=FALSE}
 got_s6_edges <- read_csv("data/got-s6-edges.csv")
 
@@ -29,7 +33,7 @@ got_s6_nodes <- read_csv("data/got-s6-nodes.csv")
 ```
 
 
-Examine the structure  
+We'll take a quick glance at the structure of the datasets.   
 ```{r}
 str(got_s6_edges)
 str(got_s6_nodes)
@@ -41,7 +45,7 @@ GOT node names: `Id`, `Label`
 
 ---
 
-Create igraph object
+Create undirected igraph object
 ```{r}
 got_igraph <- graph_from_data_frame(
   got_s6_edges,
@@ -52,11 +56,18 @@ got_igraph <- graph_from_data_frame(
 
 
 
-Create a tidygraph object
+Create a tidygraph object.  
+
+The tidygraph package makes it easier to work with graph network data, especially if you're comfortable with or prefer using dplyr from the tidyverse.  
 ```{r}
 got_tidygraph <- tbl_graph(nodes = got_s6_nodes, edges = got_s6_edges, directed = FALSE)
 
 got_tidygraph
+```
+The Season 6 dataset has 142 nodes aka characters and 542 weighted edges. Summing the weights of each character-to-character interaction, there are a total of 5795 interactions among characters in the network.
+
+```{r}
+got_tidygraph |> activate(edges) |> as_tibble() |> summarise(total_interactions = sum(Weight))
 ```
 
 <!-- 
