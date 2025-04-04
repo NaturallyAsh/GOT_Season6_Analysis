@@ -1,1 +1,5 @@
 /.quarto/
+.Rproj.user
+GOT_Season6_files
+GOT_Season6.Rproj
+.DS_Store

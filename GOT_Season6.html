@@ -2,22 +2,28 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.0.37">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ashleigh Wilson">
 
-<title>Game of Thrones Season 6 Network Analysis</title>
+<title>Understanding Workplace Dynamics through Organizational Network Analysis: A Demonstration using Game of Thrones Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-span.underline{text-decoration: underline;}
-div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -28,7 +34,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -42,43 +48,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -88,10 +64,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="GOT_Season6_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="GOT_Season6_files/libs/quarto-html/anchor.min.js"></script>
 <link href="GOT_Season6_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="GOT_Season6_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="GOT_Season6_files/libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="GOT_Season6_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="GOT_Season6_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="GOT_Season6_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="GOT_Season6_files/libs/bootstrap/bootstrap-973236bd072d72a04ee9cd82dcc9cb29.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="GOT_Season6_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="GOT_Season6_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
 
 </head>
@@ -104,7 +82,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Game of Thrones Season 6 Network Analysis</h1>
+<h1 class="title">Understanding Workplace Dynamics through Organizational Network Analysis: A Demonstration using Game of Thrones Data</h1>
 </div>
 
 
@@ -118,450 +96,205 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
   </div>
     
+  
     
   </div>
   
 
+
 </header>
 
-<div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Overview</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Explore</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+
+<section id="introduction-to-ona" class="level1">
+<h1>Introduction to ONA</h1>
+<p>Think about how work actually gets done. It’s not just about following the official company structure. People ask colleagues for advice, collaborate on projects across teams, and share information informally. These hidden connections are vital for getting things done, sparking new ideas, and building our company culture.</p>
+<p><strong>Organizational Network Analysis (ONA)</strong> is simply a tool to see and understand this hidden network. It helps us answer questions like:</p>
+<ul>
+<li><strong>Who really talks to whom?</strong> Where does information flow quickly, and where does it get stuck?</li>
+<li><strong>Who works well together?</strong> Are there teams or groups that are cut off from others?</li>
+<li><strong>Who are the key “go-to” people?</strong> These might not be managers, but they are central to getting work done and influencing others.</li>
+<li><strong>Are there hidden groups or cliques?</strong> ONA can show us natural working groups we didn’t know about.</li>
+</ul>
+<p>ONA helps companies make informed decisions to boost productivity, support talent, manage change, and build a more equitable workplace. Since real employee data is sensitive, I used Game of Thrones (GOT) character interactions to demonstrate the method.</p>
+</section>
+<section id="mapping-connections-using-game-of-thrones-data" class="level1">
+<h1>Mapping Connections Using Game of Thrones Data</h1>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">The Data</h2>
+<p>I used data about who interacted with whom in Game of Thrones Season 6. (Data source: <a href="https://github.com/mathbeveridge/gameofthrones">here</a>). This includes:</p>
+<ul>
+<li><strong>Characters (Nodes):</strong> A list of people (like our employees).</li>
+<li><strong>Interactions (Edges):</strong> Records of which characters interacted, and how often (like emails, meetings, or working together). - The more interactions, the stronger the connection (Weight).</li>
+</ul>
+<p>Packages used:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidygraph)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggraph)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<p>Load datasets</p>
+<p>Loading the Data:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>got_s6_edges <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/got-s6-edges.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>got_s6_nodes <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/got-s6-nodes.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Examine the structure</p>
+<p>Quick Look at the Data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(got_s6_edges)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(got_s6_edges)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>spec_tbl_df [542 × 4] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
- $ Source: chr [1:542] "JON" "MISSANDEI" "TYRION" "ARYA" ...
- $ Target: chr [1:542] "SANSA" "TYRION" "VARYS" "JAQEN" ...
- $ Weight: num [1:542] 151 88 86 83 82 81 80 80 76 76 ...
- $ Season: num [1:542] 6 6 6 6 6 6 6 6 6 6 ...
- - attr(*, "spec")=
-  .. cols(
-  ..   Source = col_character(),
-  ..   Target = col_character(),
-  ..   Weight = col_double(),
-  ..   Season = col_double()
-  .. )
- - attr(*, "problems")=&lt;externalptr&gt; </code></pre>
+<pre><code>Rows: 542
+Columns: 4
+$ Source &lt;chr&gt; "JON", "MISSANDEI", "TYRION", "ARYA", "DAVOS", "GREY_WORM", "DA…
+$ Target &lt;chr&gt; "SANSA", "TYRION", "VARYS", "JAQEN", "MELISANDRE", "TYRION", "J…
+$ Weight &lt;dbl&gt; 151, 88, 86, 83, 82, 81, 80, 80, 76, 76, 72, 69, 66, 64, 60, 57…
+$ Season &lt;dbl&gt; 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, …</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(got_s6_nodes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(got_s6_nodes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>spec_tbl_df [142 × 2] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
- $ Id   : chr [1:142] "AERON" "AERYS" "ALLISER_THORNE" "AREO" ...
- $ Label: chr [1:142] "Aeron" "Aerys" "Alliser" "Areo" ...
- - attr(*, "spec")=
-  .. cols(
-  ..   Id = col_character(),
-  ..   Label = col_character()
-  .. )
- - attr(*, "problems")=&lt;externalptr&gt; </code></pre>
+<pre><code>Rows: 142
+Columns: 2
+$ Id    &lt;chr&gt; "AERON", "AERYS", "ALLISER_THORNE", "AREO", "ARTHUR", "ARTHUR_CH…
+$ Label &lt;chr&gt; "Aeron", "Aerys", "Alliser", "Areo", "Arthur", "Arthur (child)",…</code></pre>
 </div>
 </div>
-<p>GOT edge names: <code>Source</code>, <code>Target</code>, <code>Weight</code>, <code>Season</code><br>
-GOT node names: <code>Id</code>, <code>Label</code></p>
-<hr>
-<p>Create igraph object</p>
+<ul>
+<li><p><strong>Interactions:</strong> <code>Source</code> (who started), <code>Target</code> (who received), <code>Weight</code> (how strong), <code>Season</code>.</p></li>
+<li><p><strong>Characters:</strong> <code>Id</code>, <code>Label</code> (name).</p></li>
+</ul>
+<p>This network has 142 characters (nodes) and 542 connections (edges).</p>
+<p>Let’s see how much interaction happened overall:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>got_igraph <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  got_s6_edges,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">directed =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vertices =</span> got_s6_nodes</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Create a tidygraph object</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>got_tidygraph <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(<span class="at">nodes =</span> got_s6_nodes, <span class="at">edges =</span> got_s6_edges, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>got_tidygraph</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tbl_graph: 142 nodes and 542 edges
-#
-# An undirected multigraph with 2 components
-#
-# Node Data: 142 × 2 (active)
-  Id             Label         
-  &lt;chr&gt;          &lt;chr&gt;         
-1 AERON          Aeron         
-2 AERYS          Aerys         
-3 ALLISER_THORNE Alliser       
-4 AREO           Areo          
-5 ARTHUR         Arthur        
-6 ARTHUR_CHILD   Arthur (child)
-# … with 136 more rows
-#
-# Edge Data: 542 × 4
-   from    to Weight Season
-  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1    54   117    151      6
-2    84   132     88      6
-3   132   135     86      6
-# … with 539 more rows</code></pre>
-</div>
-</div>
-<!-- 
-Ground truth graph:
-ggraph(got_tidygraph) +
-  geom_edge_link() +
-  geom_node_point()
--->
-<!-- 
-count clusters:
-net1 |> 
-  activate(nodes) |> 
-  select(cluster) |> 
-  pull() |> unique() |> sort()
--->
-<section id="communities-and-centralities." class="level3">
-<h3 class="anchored" data-anchor-id="communities-and-centralities.">Communities and centralities.</h3>
-<p><em>Communities</em> are subset clusters of a graph network. Community detection algorithms seek to build clusters that have high edge density between nodes inside each cluster, and have low edge density between nodes in different clusters. These algorithms quantify communities using a measure called <strong>Modularity</strong>. Modularity measures how dense the connections are within clusters of nodes. The higher the modularity (ranging from -1 to 1) the more connected nodes are inside clusters compared to between clusters.</p>
-<p>A common community detection algorithm is the Louvain algorithm which seeks to maximize modularity. Tidygraph comes with some handy functions (prefixed with <code>group_</code>) to easily calculate communities.</p>
-<p><em>Centrality measures</em> describe the importance or influence of a vertex in the connected structure of a graph. For this project I focus of three common types of centrality measures:<br>
-- <em>Degree centrality</em> - the raw measure of the number of connections between nodes. So, this will show the number of people a GOT character has interacted with one or more times.<br>
-- <em>Betweenness centrality</em> - is a measure of how important a given vertex is in connecting other pairs of nodes in the graph. It describes the number of shortest paths between nodes. Nodes with high betweenness centrality are on the path between many other nodes, i.e.&nbsp;they are characters who are key connections or bridges between different groups of nodes. Characters with higher betweenness centrality can be regarded as influential and crucial players due to their intermediary position in the network. Their removal (or murder, as is common for GOT characters) from the network has the highest risk of cutting off informational flow and overall disconnection.<br>
-- <em>Node ranking</em> - The rank of a given node, measured in terms of degree of connectivity, is determined by the set of nodes that point to it. PageRank centrality is a measure that considers nodes more important if they have many incoming edges.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>net1 <span class="ot">&lt;-</span> got_tidygraph <span class="sc">|&gt;</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(nodes) <span class="sc">|&gt;</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cluster =</span> <span class="fu">group_louvain</span>(),</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">between =</span> <span class="fu">centrality_betweenness</span>(),</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">rank =</span> <span class="fu">centrality_pagerank</span>()</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in betweenness(graph = graph, v = V(graph), directed = directed, :
-'nobigint' is deprecated since igraph 1.3 and will be removed in igraph 1.4</code></pre>
-</div>
-</div>
-</section>
-<section id="graph-network-with-all-characters-in-season-6" class="level3">
-<h3 class="anchored" data-anchor-id="graph-network-with-all-characters-in-season-6">Graph network with all characters in season 6</h3>
-<p>We can use <code>ggraph</code> to visualize the clusters of highly connected characters in season 6.</p>
-<p>The thickness of lines are based on edge weights and represent the strength of a connection between characters.</p>
-<p>The clusters of colored nodes represent communities of highly connected characters.</p>
-<p>The size of nodes is each character’s betweenness. The larger the size of the node, the greater impact the character’s importance and their influence on the spread of information.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(net1, <span class="at">layout =</span> <span class="st">"stress"</span>) <span class="sc">+</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link2</span>(<span class="fu">aes</span>(<span class="at">alpha =</span> Weight)) <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(cluster), <span class="at">size =</span> between)) <span class="sc">+</span> <span class="co"># remember to convert cluster to factor</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> Label, <span class="at">size =</span> rank)) <span class="sc">+</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>() <span class="sc">+</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GOT_Season6_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<table class="lightable-classic caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Total Interactions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">5795</td>
+</tr>
+</tbody>
+</table>
+
+
 </div>
 </div>
-<!-- 
-Calculate and graph key players:
-
-# not fully sure what's behind the node_is_keyplayer() algorithm.
-key_players <- net1 |> 
-  activate(nodes) |> 
-  mutate(key = node_is_keyplayer(10)) |> 
-  filter(key == TRUE) |> 
-  select(Label) |> 
-  pull()
-
-net1 |> 
-  activate(nodes) |> 
-  mutate(Label = ifelse(
-    Label %in% key_players,
-    key_players,
-    ""
-  )) |> 
-  ggraph(layout = "stress") +
-  geom_edge_link2(aes(alpha = Weight), show.legend = FALSE) +
-  geom_node_point(aes(color = factor(cluster), size = between), show.legend = FALSE) + # remember to convert cluster to factor
-  geom_node_text(aes(label = Label, size = rank), show.legend = FALSE)
--->
+<p>There were 5795 weighted interactions – a lot of activity!</p>
+<hr>
 </section>
-<section id="top-character-in-each-community." class="level3">
-<h3 class="anchored" data-anchor-id="top-character-in-each-community.">Top character in each community.</h3>
-<p>Here we’ll look for the most important character in each community based on the degree, or the number of connections, each character has in the network.</p>
+<section id="what-to-look-for-in-a-network" class="level2">
+<h2 class="anchored" data-anchor-id="what-to-look-for-in-a-network">What To Look For in a Network</h2>
+<p>When looking at a network map, we want to focus on a few key things:</p>
+<ul>
+<li><p><strong>Groups (Communities):</strong> People often form groups that interact a lot internally, but less with outsiders. Think of departments, project teams, or even lunch groups. Finding these helps us see natural working units and potential barriers between groups (“silos”).</p></li>
+<li><p><strong>Important People (Centrality):</strong> Some people are more important in the network than others. We measure this in a few ways:</p></li>
+<li><p><strong>Most Connected (Degree):</strong> Who has the most direct connections? These people are local hubs of activity.</p></li>
+<li><p><strong>Key Connectors (Betweenness):</strong> Who sits <em>between</em> different groups and connects people who wouldn’t otherwise be connected? These are vital bridges for information flow. Losing them can break the network apart. They can also become bottlenecks if they’re too busy.</p></li>
+<li><p><strong>Influencers (PageRank):</strong> Who is connected to <em>other</em> well-connected people? These individuals often have broad influence and access to information across the network.</p></li>
+</ul>
+<p><strong>Finding these Patterns:</strong> We can calculate these scores for everyone in the network.</p>
+</section>
+</section>
+<section id="what-the-map-showed" class="level1">
+<h1>What The Map Showed</h1>
+<section id="the-big-picture" class="level2">
+<h2 class="anchored" data-anchor-id="the-big-picture">The Big Picture</h2>
+<p>Let’s draw the map to see the overall structure.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get total number of communities</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>got_clusters <span class="ot">&lt;-</span> net1 <span class="sc">|&gt;</span> </span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(nodes) <span class="sc">|&gt;</span> </span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(cluster) <span class="sc">|&gt;</span> </span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>() <span class="sc">|&gt;</span> <span class="fu">unique</span>() <span class="sc">|&gt;</span> <span class="fu">sort</span>()</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>top_characters <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick print view of the top characters of each community by degree centrality.</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> got_clusters) {</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  tops <span class="ot">&lt;-</span> net1 <span class="sc">|&gt;</span> </span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">activate</span>(nodes) <span class="sc">|&gt;</span> </span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">degree =</span> <span class="fu">centrality_degree</span>()) <span class="sc">|&gt;</span> </span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(cluster <span class="sc">==</span> i) <span class="sc">|&gt;</span> </span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(degree)) </span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(tops)</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tbl_graph: 39 nodes and 158 edges
-#
-# An undirected multigraph with 1 component
-#
-# Node Data: 39 × 6 (active)
-  Id         Label      cluster between    rank degree
-  &lt;chr&gt;      &lt;chr&gt;        &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
-1 SANSA      Sansa            1  2592.  0.0284      40
-2 JON        Jon              1  1889.  0.0233      31
-3 DAVOS      Davos            1   227.  0.0171      23
-4 TORMUND    Tormund          1   217.  0.0156      21
-5 RAMSAY     Ramsay           1   587.  0.0161      19
-6 MELISANDRE Melisandre       1    57.8 0.00943     13
-# … with 33 more rows
-#
-# Edge Data: 158 × 4
-   from    to Weight Season
-  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1     1     2    151      6
-2     3     6     82      6
-3     2     3     80      6
-# … with 155 more rows
-# A tbl_graph: 25 nodes and 75 edges
-#
-# An undirected simple graph with 1 component
-#
-# Node Data: 25 × 6 (active)
-  Id        Label     cluster between    rank degree
-  &lt;chr&gt;     &lt;chr&gt;       &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
-1 TYRION    Tyrion          2 1466.   0.0202      26
-2 DAENERYS  Daenerys        2  821.   0.0175      18
-3 VARYS     Varys           2  489.   0.0143      16
-4 THEON     Theon           2  846.   0.0111      13
-5 MISSANDEI Missandei       2  141.   0.00950     10
-6 GREY_WORM Grey Worm       2    8.97 0.00797      9
-# … with 19 more rows
-#
-# Edge Data: 75 × 4
-   from    to Weight Season
-  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1     1     5     88      6
-2     1     3     86      6
-3     1     6     81      6
-# … with 72 more rows
-# A tbl_graph: 17 nodes and 64 edges
-#
-# An undirected simple graph with 1 component
-#
-# Node Data: 17 × 6 (active)
-  Id           Label        cluster between    rank degree
-  &lt;chr&gt;        &lt;chr&gt;          &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
-1 CERSEI       Cersei             3 1157.   0.0203      27
-2 JAIME        Jaime              3 1288.   0.0185      24
-3 MARGAERY     Margaery           3  434.   0.0122      17
-4 OLENNA       Olenna             3 1121.   0.0120      14
-5 HIGH_SPARROW High Sparrow       3    8.13 0.00785     10
-6 KEVAN        Kevan              3    6.23 0.00790     10
-# … with 11 more rows
-#
-# Edge Data: 64 × 4
-   from    to Weight Season
-  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1     3     5     76      6
-2     1     2     66      6
-3     5     7     49      6
-# … with 61 more rows
-# A tbl_graph: 14 nodes and 44 edges
-#
-# An undirected simple graph with 1 component
-#
-# Node Data: 14 × 6 (active)
-  Id               Label            cluster between    rank degree
-  &lt;chr&gt;            &lt;chr&gt;              &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
-1 NED              Ned                    4 1112.   0.0184      23
-2 BRAN             Bran                   4  626.   0.0143      17
-3 THREE_EYED_RAVEN Three Eyed Raven       4   26.9  0.00983     11
-4 HODOR            Hodor                  4   21.3  0.00809      9
-5 BENJEN           Benjen                 4    6.80 0.00650      7
-6 MEERA            Meera                  4    1.2  0.00657      7
-# … with 8 more rows
-#
-# Edge Data: 44 × 4
-   from    to Weight Season
-  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1     2     3     76      6
-2     2     6     51      6
-3     4     6     39      6
-# … with 41 more rows
-# A tbl_graph: 12 nodes and 38 edges
-#
-# An undirected simple graph with 1 component
-#
-# Node Data: 12 × 6 (active)
-  Id         Label      cluster between    rank degree
-  &lt;chr&gt;      &lt;chr&gt;        &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
-1 ARYA       Arya             5   326.  0.0126      17
-2 LADY_CRANE Lady Crane       5    62.4 0.0102      14
-3 BOBONO     Bobono           5    38.3 0.00924     13
-4 IZEMBARO   Izembaro         5    31.9 0.00931     13
-5 BIANCA     Bianca           5    34.8 0.00856     12
-6 CLARENZO   Clarenzo         5    10.8 0.00856     12
-# … with 6 more rows
-#
-# Edge Data: 38 × 4
-   from    to Weight Season
-  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1     1    11     83      6
-2     1     2     64      6
-3     1    12     48      6
-# … with 35 more rows
-# A tbl_graph: 9 nodes and 19 edges
-#
-# An undirected simple graph with 1 component
-#
-# Node Data: 9 × 6 (active)
-  Id      Label   cluster between    rank degree
-  &lt;chr&gt;   &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
-1 ELLARIA Ellaria       6   322.  0.00978      8
-2 TYENE   Tyene         6   192   0.00842      7
-3 DORAN   Doran         6     1.5 0.00681      5
-4 NYMERIA Nymeria       6    65.5 0.00627      5
-5 OBARA   Obara         6    65.5 0.00627      5
-6 AREO    Areo          6     0   0.00543      4
-# … with 3 more rows
-#
-# Edge Data: 19 × 4
-   from    to Weight Season
-  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1     4     5      9      6
-2     1     3      8      6
-3     4     9      7      6
-# … with 16 more rows
-# A tbl_graph: 9 nodes and 19 edges
-#
-# An undirected simple graph with 1 component
-#
-# Node Data: 9 × 6 (active)
-  Id           Label        cluster between    rank degree
-  &lt;chr&gt;        &lt;chr&gt;          &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
-1 BRYNDEN      Brynden            7   333.  0.0104      11
-2 EDMURE       Edmure             7   168.  0.0101      10
-3 WALDER       Walder             7    56.1 0.00711      8
-4 BRONN        Bronn              7    12.2 0.00641      7
-5 BLACK_WALDER Black Walder       7     0   0.00572      6
-6 LOTHAR       Lothar             7     0   0.00572      6
-# … with 3 more rows
-#
-# Edge Data: 19 × 4
-   from    to Weight Season
-  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1     5     6     15      6
-2     3     5     15      6
-3     1     2     11      6
-# … with 16 more rows
-# A tbl_graph: 9 nodes and 23 edges
-#
-# An undirected simple graph with 1 component
-#
-# Node Data: 9 × 6 (active)
-  Id      Label   cluster between    rank degree
-  &lt;chr&gt;   &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
-1 SAM     Sam           8  1010.  0.0113       9
-2 GILLY   Gilly         8     2.7 0.00882      7
-3 MELESSA Melessa       8     0.2 0.00747      6
-4 RANDYLL Randyll       8     0.2 0.00747      6
-5 TALLA   Talla         8     0.2 0.00747      6
-6 DICKON  Dickon        8     0   0.00637      5
-# … with 3 more rows
-#
-# Edge Data: 23 × 4
-   from    to Weight Season
-  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1     1     2     80      6
-2     1     7     21      6
-3     1     3     21      6
-# … with 20 more rows
-# A tbl_graph: 8 nodes and 14 edges
-#
-# An undirected simple graph with 1 component
-#
-# Node Data: 8 × 6 (active)
-  Id     Label  cluster between    rank degree
-  &lt;chr&gt;  &lt;chr&gt;    &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
-1 LEM    Lem          9       7 0.0113       6
-2 HOUND  Sandor       9       7 0.0101       5
-3 RAY    Ray          9       2 0.00780      4
-4 BERIC  Beric        9       0 0.00612      3
-5 FLYNN  Flynn        9       0 0.00602      3
-6 MORGAN Morgan       9       0 0.00602      3
-# … with 2 more rows
-#
-# Edge Data: 14 × 4
-   from    to Weight Season
-  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1     2     3     41      6
-2     2     4     26      6
-3     2     7     25      6
-# … with 11 more rows</code></pre>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GOT_Season6_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Store the names of the top characters of each community to a vector</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> got_clusters) {</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  tops <span class="ot">&lt;-</span> net1 <span class="sc">|&gt;</span> </span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">activate</span>(nodes) <span class="sc">|&gt;</span> </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">degree =</span> <span class="fu">centrality_degree</span>()) <span class="sc">|&gt;</span> </span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(cluster <span class="sc">==</span> i) <span class="sc">|&gt;</span> </span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(degree)) <span class="sc">|&gt;</span> </span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">top_n</span>(degree, <span class="at">n =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(Label)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  top_characters <span class="ot">&lt;-</span> top_characters <span class="sc">|&gt;</span> <span class="fu">append</span>(tops)</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>top_characters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p><strong>What this Map Shows:</strong></p>
+<ul>
+<li><p><strong>Groups (Colors):</strong> The different colors show distinct groups. Do these match our departments? Are some groups isolated with few links to others (silos)?</p></li>
+<li><p><strong>Key Connectors (Big Dots):</strong> People like Sansa, Daenerys, Tyrion are big dots – they connect different groups. In our company, who are these vital bridges? We need to support them, but also ensure they aren’t bottlenecks.</p></li>
+<li><p><strong>Strong Relationships (Thick Lines):</strong> Thick lines show frequent interaction. Are the right people talking? Are there weak links where we expect strong ones?</p></li>
+<li><p><strong>Influencers (Big Labels):</strong> Characters with bigger labels are connected to other important people. In our workplace, these could be leaders, experts, or trusted advisors.</p></li>
+</ul>
+<section id="whos-important-in-each-group" class="level3">
+<h3 class="anchored" data-anchor-id="whos-important-in-each-group">Who’s Important in Each Group?</h3>
+<p>Let’s find the most directly connected person (highest “Degree” score) within each colored group.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Most Connected Person (by Direct Ties) in each Group:"</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Sansa"   "Tyrion"  "Cersei"  "Ned"     "Arya"    "Ellaria" "Brynden"
 [8] "Sam"     "Lem"    </code></pre>
 </div>
 </div>
-<p>Graph displaying top characters in each community.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>top_char_net <span class="ot">&lt;-</span> net1 <span class="sc">|&gt;</span> </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(nodes) <span class="sc">|&gt;</span> </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Label =</span> <span class="fu">ifelse</span>(</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    Label <span class="sc">%in%</span> top_characters,</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    Label,</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">""</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(top_char_net, <span class="at">layout =</span> <span class="st">"stress"</span>) <span class="sc">+</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link2</span>(<span class="fu">aes</span>(<span class="at">alpha =</span> Weight)) <span class="sc">+</span></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(cluster), <span class="at">size =</span> between)) <span class="sc">+</span> <span class="co"># remember to convert cluster to factor</span></span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> Label, <span class="at">size =</span> rank)) <span class="sc">+</span> </span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>() <span class="sc">+</span> </span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span></span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="GOT_Season6_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
+<p>The analysis picks out key figures in different storylines: Sansa (North), Daenerys (Essos), Cersei (King’s Landing), etc. These are the main hubs within their circles.</p>
+<p><strong>What This Means:</strong> Finding the most connected person in each team or department helps me identify:</p>
+<ul>
+<li><p><strong>Local Leaders:</strong> Maybe the official manager, or maybe just the informal go-to person in that group.</p></li>
+<li><p><strong>Information Hubs:</strong> They likely know what’s going on <em>within</em> their group.</p></li>
+<li><p><strong>Good Representatives:</strong> They might be good people to ask for the group’s opinion.</p></li>
+</ul>
 </section>
+<section id="map-highlighting-the-key-people-in-each-group" class="level3">
+<h3 class="anchored" data-anchor-id="map-highlighting-the-key-people-in-each-group">Map Highlighting the Key People in Each Group</h3>
+<p>Let’s redraw the map, but only label these key group figures.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GOT_Season6_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
 </div>
+<p><strong>What This Shows:</strong></p>
+<p>This map makes it easier to see how the main hubs of different teams or groups are connected (or not connected) to each other. It highlights potential cross-team leaders or critical links between departments.</p>
+</section>
+</section>
+</section>
+<section id="ona-deia-key-implications" class="level1">
+<h1>ONA &amp; DEIA: Key Implications</h1>
+<p>Looking at network maps like the Game of Thrones example can give organizations powerful insights into fairness and inclusion within their workplace. Here’s how ONA can help a company understand and improve Diversity, Equity, Inclusion, and Accessibility (DEIA):</p>
+<ul>
+<li><p><strong>Finding Hidden Diverse Influencers:</strong> ONA can reveal influential people and key connectors who belong to underrepresented groups but might not hold senior titles. Are these individuals recognized within the organization? Are they receiving adequate support? Identifying them helps ensure diverse voices contribute to decision-making and can highlight pathways for creating fairer opportunities for growth.</p></li>
+<li><p><strong>Checking for Fair Access to Information:</strong> Does important information reach everyone equitably, or are some demographic groups systematically excluded? ONA can map whether people from underrepresented backgrounds are consistently outside the main information flows, potentially missing out on opportunities or feeling isolated. This helps identify and address communication barriers.</p></li>
+<li><p><strong>Seeing if Teams are Truly Inclusive:</strong> ONA can illustrate whether work groups and teams integrate people from different backgrounds, or if individuals tend to cluster with others similar to themselves (homophily). It helps visualize if employees from underrepresented groups are central to team networks or are positioned on the periphery.</p></li>
+<li><p><strong>Understanding the Impact When Diverse Talent Leaves:</strong> If a key connector from an underrepresented group departs, who else within the network loses connections? ONA can show if their departure disproportionately isolates others from similar backgrounds, highlighting the need for stronger retention strategies, supportive networks, and broader relationship-building initiatives for everyone.</p></li>
+<li><p><strong>Making Onboarding Fair for Everyone:</strong> Are new hires from diverse backgrounds integrating into the organizational network as quickly and effectively as others? ONA can track this integration process. If certain groups consistently take longer to build connections, it may signal biases or areas where onboarding processes need to be made more intentionally inclusive.</p></li>
+<li><p><strong>Including Diverse Voices in Decisions &amp; Change:</strong> When planning organizational changes, are perspectives gathered equitably? ONA helps identify trusted influencers across various employee groups. Engaging these diverse influencers can lead to change initiatives that are more effective, sustainable, and perceived as fairer by the workforce.</p></li>
+<li><p><strong>Spotting Hidden Barriers:</strong> The informal network revealed by ONA might uncover systemic inequities hidden by the formal organizational chart. For instance, ONA might show that opportunities to join high-profile projects are disproportionately allocated to certain demographic groups. This data provides a basis for examining and addressing practices to create more equitable opportunities.</p></li>
+</ul>
+<p>By utilizing ONA with a focus on DEIA, organizations can move beyond assumptions and gather objective data about inclusion, helping to build workplaces where everyone feels connected, valued, and has equitable opportunities to succeed.</p>
+</section>
+<section id="recommendations-for-organizations" class="level1">
+<h1>Recommendations for Organizations</h1>
+<p>Companies can use ONA insights to improve effectiveness and DEIA:</p>
+<ol type="1">
+<li><p><strong>Conduct ONA Ethically:</strong> Periodically map networks (via surveys or anonymized data with strict privacy controls) to track dynamics.</p></li>
+<li><p><strong>Support Diverse Connectors:</strong> Recognize, support, and develop influential employees from underrepresented groups.</p></li>
+<li><p><strong>Bridge Gaps:</strong> Actively foster connections between isolated groups or individuals, especially across demographic lines.</p></li>
+<li><p><strong>Mitigate Key Person Risk:</strong> Plan for succession and knowledge sharing, particularly for diverse individuals in critical bridging roles.</p></li>
+<li><p><strong>Integrate ONA into DEIA Strategy:</strong> Use network data to inform initiatives and measure progress on inclusion goals.</p></li>
+</ol>
+</section>
+<section id="project-limitations-to-note" class="level1">
+<h1>Project Limitations to Note</h1>
+<ul>
+<li><strong>Example Data:</strong> In this project, I used Game of Thrones data as a substitute for real workplace data. While illustrative, character interactions in a fictional series are driven by different factors than professional interactions in an organization.</li>
+<li><strong>Data Collection Challenges:</strong> Implementing ONA in a real organization requires careful planning around data collection methods (surveys, passive data), ensuring data quality, and navigating ethical considerations and privacy regulations.</li>
+<li><strong>Static Snapshot:</strong> The analysis presented here represents a single point in time (Season 6). Real organizational networks are dynamic and change constantly. ONA provides the most value when used to track trends over time.</li>
+</ul>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Organizational Network Analysis offers a valuable method for looking beyond formal structures to understand the real, informal networks that drive communication, collaboration, and influence within a company. As I demonstrated using the Game of Thrones dataset, ONA techniques can identify key structures, influencers, and potential bottlenecks.</p>
+<p>When viewed through a DEIA lens, ONA can provide objective data to help organizations build more equitable, inclusive, and ultimately more effective workplaces by ensuring everyone is connected and valued.</p>
+</section>
 
 </main>
 <!-- /main column -->
@@ -592,12 +325,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
     }
-  });
-  clipboard.on('success', function(e) {
+    return false;
+  }
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -606,17 +342,71 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -626,43 +416,307 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      let href = ref.getAttribute('href');
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
 </script>
 </div> <!-- /content -->
+
 
 
 

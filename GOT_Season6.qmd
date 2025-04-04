@@ -1,100 +1,105 @@
 ---
-title: "Game of Thrones Season 6 Network Analysis"
+title: "Understanding Workplace Dynamics through Organizational Network Analysis: A Demonstration using Game of Thrones Data"
 author: "Ashleigh Wilson"
-page-layout: article
+format: html
+knitr:
+  opts_chunk:
+    echo: FALSE
+    warning: FALSE
+    message: FALSE
 ---
 
-::: {.panel-tabset}
+# Introduction to ONA
 
-## Overview  
+Think about how work actually gets done. It’s not just about following the official company structure. People ask colleagues for advice, collaborate on projects across teams, and share information informally. These hidden connections are vital for getting things done, sparking new ideas, and building our company culture.
 
-We will explore the characters from the Game of Thrones Season 6 television series and visualize the network of connections between these characters.  
+**Organizational Network Analysis (ONA)** is simply a tool to see and understand this hidden network. It helps us answer questions like:
 
-Data source available [here](https://github.com/mathbeveridge/gameofthrones).
+-   **Who really talks to whom?** Where does information flow quickly, and where does it get stuck?
+-   **Who works well together?** Are there teams or groups that are cut off from others?
+-   **Who are the key "go-to" people?** These might not be managers, but they are central to getting work done and influencing others.
+-   **Are there hidden groups or cliques?** ONA can show us natural working groups we didn't know about.
 
+ONA helps companies make informed decisions to boost productivity, support talent, manage change, and build a more equitable workplace. Since real employee data is sensitive, I used Game of Thrones (GOT) character interactions to demonstrate the method.
 
-## Explore  
+# Mapping Connections Using Game of Thrones Data
 
-Required packages:  
-```{r, message=FALSE}
+## The Data
+
+I used data about who interacted with whom in Game of Thrones Season 6. (Data source: [here](https://github.com/mathbeveridge/gameofthrones)). This includes:
+
+-   **Characters (Nodes):** A list of people (like our employees).
+-   **Interactions (Edges):** Records of which characters interacted, and how often (like emails, meetings, or working together). - The more interactions, the stronger the connection (Weight).
+
+Packages used:
+
+```{r, echo=TRUE}
 library(tidygraph)
 library(ggraph)
 library(igraph)
 library(tidyverse)
+library(kableExtra)
 ```
 
+Loading the Data:
 
-Load datasets
-```{r, message=FALSE}
+```{r, echo=TRUE}
 got_s6_edges <- read_csv("data/got-s6-edges.csv")
 
 got_s6_nodes <- read_csv("data/got-s6-nodes.csv")
 
 ```
 
+Quick Look at the Data:
 
-We'll take a quick glance at the structure of the datasets.   
-```{r}
-str(got_s6_edges)
-str(got_s6_nodes)
+```{r, echo=TRUE}
+glimpse(got_s6_edges)
+glimpse(got_s6_nodes)
 ```
 
-GOT edge names: `Source`, `Target`, `Weight`, `Season`  
-GOT node names: `Id`, `Label`  
+-   **Interactions:** `Source` (who started), `Target` (who received), `Weight` (how strong), `Season`.
 
+-   **Characters:** `Id`, `Label` (name).
 
----
+This network has 142 characters (nodes) and 542 connections (edges).
 
-Create undirected igraph object
-```{r}
-got_igraph <- graph_from_data_frame(
-  got_s6_edges,
-  directed = FALSE,
-  vertices = got_s6_nodes
-)
-```
+Let's see how much interaction happened overall:
 
-
-
-Create a tidygraph object.  
-
-The tidygraph package makes it easier to work with graph network data, especially if you're comfortable with or prefer using dplyr from the tidyverse.  
 ```{r}
 got_tidygraph <- tbl_graph(nodes = got_s6_nodes, edges = got_s6_edges, directed = FALSE)
 
-got_tidygraph
+got_tidygraph |> 
+  activate(edges) |> 
+  as_tibble() |> 
+  summarise(`Total Interactions` = sum(Weight)) |> 
+  head() |> 
+  kbl(
+    # caption = "Total Interactions",
+    align = "l",
+  ) |> 
+  kable_classic() 
 ```
-The Season 6 dataset has 142 nodes aka characters and 542 weighted edges. Summing the weights of each character-to-character interaction, there are a total of 5795 interactions among characters in the network.
 
-```{r}
-got_tidygraph |> activate(edges) |> as_tibble() |> summarise(total_interactions = sum(Weight))
-```
+There were 5795 weighted interactions – a lot of activity!
 
-<!-- 
-Ground truth graph:
-ggraph(got_tidygraph) +
-  geom_edge_link() +
-  geom_node_point()
--->
+------------------------------------------------------------------------
 
-<!-- 
-count clusters:
-net1 |> 
-  activate(nodes) |> 
-  select(cluster) |> 
-  pull() |> unique() |> sort()
--->
+## What To Look For in a Network
 
-### Communities and centralities.  
+When looking at a network map, we want to focus on a few key things:
 
-*Communities* are subset clusters of a graph network. Community detection algorithms seek to build clusters that have high edge density between nodes inside each cluster, and have low edge density between nodes in different clusters. These algorithms quantify communities using a measure called **Modularity**. Modularity measures how dense the connections are within clusters of nodes. The higher the modularity (ranging from -1 to 1) the more connected nodes are inside clusters compared to between clusters.   
+-   **Groups (Communities):** People often form groups that interact a lot internally, but less with outsiders. Think of departments, project teams, or even lunch groups. Finding these helps us see natural working units and potential barriers between groups ("silos").
 
-A common community detection algorithm is the Louvain algorithm which seeks to maximize modularity. Tidygraph comes with some handy functions (prefixed with `group_`) to easily calculate communities.  
+-   **Important People (Centrality):** Some people are more important in the network than others. We measure this in a few ways:
 
-*Centrality measures* describe the importance or influence of a vertex in the connected structure of a graph. For this project I focus of three common types of centrality measures:  
-- *Degree centrality* - the raw measure of the number of connections between nodes. So, this will show the number of people a GOT character has interacted with one or more times.  
-- *Betweenness centrality* - is a measure of how important a given vertex is in connecting other pairs of nodes in the graph. It describes the number of shortest paths between nodes. Nodes with high betweenness centrality are on the path between many other nodes, i.e. they are characters who are key connections or bridges between different groups of nodes. Characters with higher betweenness centrality can be regarded as influential and crucial players due to their intermediary position in the network. Their removal (or murder, as is common for GOT characters) from the network has the highest risk of cutting off informational flow and overall disconnection.  
-- *Node ranking* - The rank of a given node, measured in terms of degree of connectivity, is determined by the set of nodes that point to it. PageRank centrality is a measure that considers nodes more important if they have many incoming edges.   
+-   **Most Connected (Degree):** Who has the most direct connections? These people are local hubs of activity.
+
+-   **Key Connectors (Betweenness):** Who sits *between* different groups and connects people who wouldn't otherwise be connected? These are vital bridges for information flow. Losing them can break the network apart. They can also become bottlenecks if they're too busy.
+
+-   **Influencers (PageRank):** Who is connected to *other* well-connected people? These individuals often have broad influence and access to information across the network.
+
+**Finding these Patterns:** We can calculate these scores for everyone in the network.
+
 ```{r}
 net1 <- got_tidygraph |> 
   activate(nodes) |> 
@@ -103,20 +108,13 @@ net1 <- got_tidygraph |>
     between = centrality_betweenness(),
     rank = centrality_pagerank()
   ) 
-
 ```
 
+# What The Map Showed
 
-### Graph network with all characters in season 6  
+## The Big Picture
 
-We can use `ggraph` to visualize the clusters of highly connected characters in season 6.  
-
-The thickness of lines are based on edge weights and represent the strength of a connection between characters.  
-
-The clusters of colored nodes represent communities of highly connected characters.  
-
-The size of nodes is each character's betweenness. The larger the size of the node, the greater impact the character's importance and their influence on the spread of information.  
-
+Let's draw the map to see the overall structure.
 
 ```{r}
 set.seed(123)
@@ -130,38 +128,63 @@ ggraph(net1, layout = "stress") +
   )
 ```
 
-
-<!-- 
-Calculate and graph key players:
-
-# not fully sure what's behind the node_is_keyplayer() algorithm.
-key_players <- net1 |> 
-  activate(nodes) |> 
-  mutate(key = node_is_keyplayer(10)) |> 
-  filter(key == TRUE) |> 
-  select(Label) |> 
-  pull()
-
-net1 |> 
-  activate(nodes) |> 
-  mutate(Label = ifelse(
-    Label %in% key_players,
-    key_players,
-    ""
-  )) |> 
-  ggraph(layout = "stress") +
-  geom_edge_link2(aes(alpha = Weight), show.legend = FALSE) +
-  geom_node_point(aes(color = factor(cluster), size = between), show.legend = FALSE) + # remember to convert cluster to factor
-  geom_node_text(aes(label = Label, size = rank), show.legend = FALSE)
--->
-
-
-
-### Top character in each community.
-
-Here we'll look for the most important character in each community based on the degree, or the number of connections, each character has in the network.  
 ```{r}
-# get total number of communities
+
+# got_s6_edges_vizNet <- janitor::clean_names(got_s6_edges)
+# got_s6_nodes_vizNet <- janitor::clean_names(got_s6_nodes)
+# 
+# got_tidygraph_vizNet <- tbl_graph(nodes = got_s6_nodes_vizNet, edges = got_s6_edges_vizNet, directed = FALSE)
+# 
+# nodes_got_tidygraph_vizNet <- got_tidygraph_vizNet |> 
+#   activate(nodes) |> 
+#   mutate(
+#     group = group_louvain(),
+#     size = centrality_betweenness(),
+#     title = label
+#   ) |> 
+#   as_tibble()
+# 
+# edges_got_tidygraph_vizNet <- got_tidygraph_vizNet |> 
+#   activate(edges) |> 
+#   as_tibble()
+# 
+# got_s6_nodes_vizNet <- got_s6_nodes_vizNet |> 
+#   mutate(
+#     size = nodes_got_tidygraph_vizNet$size,
+#     group = nodes_got_tidygraph_vizNet$group,
+#     title = nodes_got_tidygraph_vizNet$title,
+#     value = size
+#   )
+# 
+# got_igraph_vizNet <- graph_from_data_frame(
+#   got_s6_edges_vizNet,
+#   directed = FALSE,
+#   vertices = got_s6_nodes_vizNet
+# )
+# 
+# vizNet <- toVisNetworkData(got_igraph_vizNet, idToLabel = FALSE)
+# 
+# visNetwork(nodes = vizNet$nodes, edges = vizNet$edges, randomSeed = 123) |>
+#   visOptions(selectedBy = "group") |>
+#   visNodes(shape = "circle")
+```
+
+**What this Map Shows:**
+
+-   **Groups (Colors):** The different colors show distinct groups. Do these match our departments? Are some groups isolated with few links to others (silos)?
+
+-   **Key Connectors (Big Dots):** People like Sansa, Daenerys, Tyrion are big dots – they connect different groups. In our company, who are these vital bridges? We need to support them, but also ensure they aren't bottlenecks.
+
+-   **Strong Relationships (Thick Lines):** Thick lines show frequent interaction. Are the right people talking? Are there weak links where we expect strong ones?
+
+-   **Influencers (Big Labels):** Characters with bigger labels are connected to other important people. In our workplace, these could be leaders, experts, or trusted advisors.
+
+### Who's Important in Each Group?
+
+Let's find the most directly connected person (highest "Degree" score) within each colored group.
+
+```{r}
+# Get the list of different group numbers
 got_clusters <- net1 |> 
   activate(nodes) |> 
   select(cluster) |> 
@@ -169,24 +192,7 @@ got_clusters <- net1 |>
 
 
 
-# Quick print view of the top characters of each community by degree centrality.
-for (i in got_clusters) {
-  tops <- net1 |> 
-    activate(nodes) |> 
-    mutate(degree = centrality_degree()) |> 
-    filter(cluster == i) |> 
-    arrange(desc(degree)) 
-  
-  print(tops)
-}
-
-# 
-
-```
-
-
-Now, we'll store the names of the top characters of each community to a vector.  
-```{r}
+# Find and save the name of the most connected character in each group
 top_characters <- c()
 
 for (i in got_clusters) {
@@ -201,32 +207,26 @@ for (i in got_clusters) {
   top_characters <- top_characters |> append(tops)
 }
 
-top_characters
+# Show the names of the top person found in each group
+print("Most Connected Person (by Direct Ties) in each Group:")
+print(top_characters)
+
 ```
 
-The top characters in each community based on their number of connections are:  
-- **Sansa**:  
-  - Community 1: Sansa leads this community comprised mainly of the North and Winterfell. Her strong connections with King's Landing and other communities places her as the top character. 
-- **Daenerys**:  
-  - Community 2: Daenarys' connections span the land of Essos across the narrow sea. Season 6 sees her reach expand futher to outside communities through her connections with Tyrion and Yara.  
-- **Cersei**:  
-  - Community 3: Cersei's connections dominate the areas of King's Landing and the Riverlands. Her influence expands in season 6 through her connections with her brother Tyrion and Ellaria of Dorne.   
-- **Tyrion**:  
-  - Community 4: Tyrion's status as a Lannister and his new ties to Essos, particularly with Daenary's, place him at the head of this community.  
-- **Ned**:  
-  - Community 5: Even in death, Eddard's (Ned) additional ties revealed through his son Bran's visions puts him at the head of this community. Ned's connections stretch from Winterfell to the Night's Watch at the Wall which connects the folks beyond the Wall.  
-- **Ellaria**:  
-  - Community 6: Ellaria is the paramour of Prince Oberyn of House Dorne. She has greatest number of connections to King's Landing following Prince Oberyn's death.  
-- **Brynden**:  
-  - Community 7: Brynden was the uncle of Catelyn Stark and once the served as the Hand of the King and Master of Whisperers to King Aegon Targaryen. He heads this community through his connections with the North and King's Landing.  
-- **Sam**:  
-  - Community 8: Sam of House Tarly heads the community comprising of members from The Night's Watch, Oldtown, the Citadel, and with ties to the Starks.  
-- **Lem**:  
-  - Community 9: Lem of the Brotherhood is the top character of a community mostly comprised of folk largely disconnected from the political machinations of Westeros. 
+The analysis picks out key figures in different storylines: Sansa (North), Daenerys (Essos), Cersei (King's Landing), etc. These are the main hubs within their circles.
 
----
+**What This Means:** Finding the most connected person in each team or department helps me identify:
 
-Graph displaying top characters in each community.
+-   **Local Leaders:** Maybe the official manager, or maybe just the informal go-to person in that group.
+
+-   **Information Hubs:** They likely know what's going on *within* their group.
+
+-   **Good Representatives:** They might be good people to ask for the group's opinion.
+
+### Map Highlighting the Key People in Each Group
+
+Let's redraw the map, but only label these key group figures.
+
 ```{r}
 set.seed(123)
 top_char_net <- net1 |> 
@@ -248,8 +248,52 @@ ggraph(top_char_net, layout = "stress") +
   )
 ```
 
----
+**What This Shows:**
 
-Overall, the network reveals that Sansa of House Stark and Daenarys Mother of Dragons are the most important characters in that they are the most central to the overall narrative.
+This map makes it easier to see how the main hubs of different teams or groups are connected (or not connected) to each other. It highlights potential cross-team leaders or critical links between departments.
 
-:::
+# ONA & DEIA: Key Implications
+
+Looking at network maps like the Game of Thrones example can give organizations powerful insights into fairness and inclusion within their workplace. Here’s how ONA can help a company understand and improve Diversity, Equity, Inclusion, and Accessibility (DEIA):
+
+-   **Finding Hidden Diverse Influencers:** ONA can reveal influential people and key connectors who belong to underrepresented groups but might not hold senior titles. Are these individuals recognized within the organization? Are they receiving adequate support? Identifying them helps ensure diverse voices contribute to decision-making and can highlight pathways for creating fairer opportunities for growth.
+
+-   **Checking for Fair Access to Information:** Does important information reach everyone equitably, or are some demographic groups systematically excluded? ONA can map whether people from underrepresented backgrounds are consistently outside the main information flows, potentially missing out on opportunities or feeling isolated. This helps identify and address communication barriers.
+
+-   **Seeing if Teams are Truly Inclusive:** ONA can illustrate whether work groups and teams integrate people from different backgrounds, or if individuals tend to cluster with others similar to themselves (homophily). It helps visualize if employees from underrepresented groups are central to team networks or are positioned on the periphery.
+
+-   **Understanding the Impact When Diverse Talent Leaves:** If a key connector from an underrepresented group departs, who else within the network loses connections? ONA can show if their departure disproportionately isolates others from similar backgrounds, highlighting the need for stronger retention strategies, supportive networks, and broader relationship-building initiatives for everyone.
+
+-   **Making Onboarding Fair for Everyone:** Are new hires from diverse backgrounds integrating into the organizational network as quickly and effectively as others? ONA can track this integration process. If certain groups consistently take longer to build connections, it may signal biases or areas where onboarding processes need to be made more intentionally inclusive.
+
+-   **Including Diverse Voices in Decisions & Change:** When planning organizational changes, are perspectives gathered equitably? ONA helps identify trusted influencers across various employee groups. Engaging these diverse influencers can lead to change initiatives that are more effective, sustainable, and perceived as fairer by the workforce.
+
+-   **Spotting Hidden Barriers:** The informal network revealed by ONA might uncover systemic inequities hidden by the formal organizational chart. For instance, ONA might show that opportunities to join high-profile projects are disproportionately allocated to certain demographic groups. This data provides a basis for examining and addressing practices to create more equitable opportunities.
+
+By utilizing ONA with a focus on DEIA, organizations can move beyond assumptions and gather objective data about inclusion, helping to build workplaces where everyone feels connected, valued, and has equitable opportunities to succeed.
+
+# Recommendations for Organizations
+
+Companies can use ONA insights to improve effectiveness and DEIA:
+
+1.  **Conduct ONA Ethically:** Periodically map networks (via surveys or anonymized data with strict privacy controls) to track dynamics.
+
+2.  **Support Diverse Connectors:** Recognize, support, and develop influential employees from underrepresented groups.
+
+3.  **Bridge Gaps:** Actively foster connections between isolated groups or individuals, especially across demographic lines.
+
+4.  **Mitigate Key Person Risk:** Plan for succession and knowledge sharing, particularly for diverse individuals in critical bridging roles.
+
+5.  **Integrate ONA into DEIA Strategy:** Use network data to inform initiatives and measure progress on inclusion goals.
+
+# Project Limitations to Note
+
+-   **Example Data:** In this project, I used Game of Thrones data as a substitute for real workplace data. While illustrative, character interactions in a fictional series are driven by different factors than professional interactions in an organization.
+-   **Data Collection Challenges:** Implementing ONA in a real organization requires careful planning around data collection methods (surveys, passive data), ensuring data quality, and navigating ethical considerations and privacy regulations.
+-   **Static Snapshot:** The analysis presented here represents a single point in time (Season 6). Real organizational networks are dynamic and change constantly. ONA provides the most value when used to track trends over time.
+
+# Conclusion
+
+Organizational Network Analysis offers a valuable method for looking beyond formal structures to understand the real, informal networks that drive communication, collaboration, and influence within a company. As I demonstrated using the Game of Thrones dataset, ONA techniques can identify key structures, influencers, and potential bottlenecks.
+
+When viewed through a DEIA lens, ONA can provide objective data to help organizations build more equitable, inclusive, and ultimately more effective workplaces by ensuring everyone is connected and valued.
