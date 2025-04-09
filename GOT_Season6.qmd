@@ -117,15 +117,21 @@ net1 <- got_tidygraph |>
 Let's draw the map to see the overall structure.
 
 ```{r}
+#| out-width: "100%"
+
 set.seed(123)
 ggraph(net1, layout = "stress") +
-  geom_edge_link2(aes(alpha = Weight)) +
+  geom_edge_link2(aes(edge_alpha = Weight+10)) +
   geom_node_point(aes(color = factor(cluster), size = between)) + # remember to convert cluster to factor
-  geom_node_text(aes(label = Label, size = rank)) +
+  scale_size(range = c(1,12)) +
+  geom_node_text(aes(label = Label, size = rank+7)) +
   theme_graph() +
   theme(
-    legend.position = "none"
-  )
+    legend.position = "none",
+    plot.margin = margin(0, 0, 0, 0, "cm")
+  ) 
+
+# ggsave("net1.png", device = ragg::agg_png, width = 12, height = 8, units = "cm", res = 300)
 ```
 
 ```{r}
@@ -239,13 +245,17 @@ top_char_net <- net1 |>
   ))
 
 ggraph(top_char_net, layout = "stress") +
-  geom_edge_link2(aes(alpha = Weight)) +
+  geom_edge_link2(aes(edge_alpha = Weight+10)) +
   geom_node_point(aes(color = factor(cluster), size = between)) + # remember to convert cluster to factor
-  geom_node_text(aes(label = Label, size = rank)) + 
+  scale_size(range = c(1,12)) +
+  geom_node_text(aes(label = Label, size = rank+7)) + 
   theme_graph() + 
   theme(
-    legend.position = "none"
+    legend.position = "none",
+    plot.margin = margin(0, 0, 0, 0, "cm")
   )
+
+
 ```
 
 **What This Shows:**
