@@ -4,6 +4,8 @@ author: "Ashleigh Wilson"
 format:
   html:
     embed-resources: true
+  commonmark:
+    prefer-html: true
 knitr:
   opts_chunk:
     echo: FALSE
