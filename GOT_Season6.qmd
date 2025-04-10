@@ -1,7 +1,11 @@
 ---
 title: "Understanding Workplace Dynamics through Organizational Network Analysis: A Demonstration using Game of Thrones Data"
 author: "Ashleigh Wilson"
-format: html
+format:
+  html:
+    embed-resources: true
+  commonmark:
+    prefer-html: true
 knitr:
   opts_chunk:
     echo: FALSE
@@ -131,48 +135,6 @@ ggraph(net1, layout = "stress") +
     plot.margin = margin(0, 0, 0, 0, "cm")
   ) 
 
-# ggsave("net1.png", device = ragg::agg_png, width = 12, height = 8, units = "cm", res = 300)
-```
-
-```{r}
-
-# got_s6_edges_vizNet <- janitor::clean_names(got_s6_edges)
-# got_s6_nodes_vizNet <- janitor::clean_names(got_s6_nodes)
-# 
-# got_tidygraph_vizNet <- tbl_graph(nodes = got_s6_nodes_vizNet, edges = got_s6_edges_vizNet, directed = FALSE)
-# 
-# nodes_got_tidygraph_vizNet <- got_tidygraph_vizNet |> 
-#   activate(nodes) |> 
-#   mutate(
-#     group = group_louvain(),
-#     size = centrality_betweenness(),
-#     title = label
-#   ) |> 
-#   as_tibble()
-# 
-# edges_got_tidygraph_vizNet <- got_tidygraph_vizNet |> 
-#   activate(edges) |> 
-#   as_tibble()
-# 
-# got_s6_nodes_vizNet <- got_s6_nodes_vizNet |> 
-#   mutate(
-#     size = nodes_got_tidygraph_vizNet$size,
-#     group = nodes_got_tidygraph_vizNet$group,
-#     title = nodes_got_tidygraph_vizNet$title,
-#     value = size
-#   )
-# 
-# got_igraph_vizNet <- graph_from_data_frame(
-#   got_s6_edges_vizNet,
-#   directed = FALSE,
-#   vertices = got_s6_nodes_vizNet
-# )
-# 
-# vizNet <- toVisNetworkData(got_igraph_vizNet, idToLabel = FALSE)
-# 
-# visNetwork(nodes = vizNet$nodes, edges = vizNet$edges, randomSeed = 123) |>
-#   visOptions(selectedBy = "group") |>
-#   visNodes(shape = "circle")
 ```
 
 **What this Map Shows:**
